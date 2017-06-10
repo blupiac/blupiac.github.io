@@ -11,6 +11,8 @@ var neighboursRelation = [];
 var neighboursTimeDistance = [];
 */
 
+// https://stackoverflow.com/questions/28102089/simple-graph-of-nodes-and-links-without-using-force-layout <- use this?
+
 
 //Create SVG element
 var svg = d3.select("body")
@@ -42,8 +44,8 @@ d3.tsv("data/film.tsv")
         }
         
         x = d3.scale.linear()
-                        .domain(d3.extent(rows, function(row) { return neighbours.timeDistance; }))
-                        .range([0, w]);
+                .domain(d3.extent(rows, function(row) { return neighbours.timeDistance; }))
+                .range([0, w]);
            
         dataset = rows;
         draw();
@@ -63,7 +65,7 @@ function draw()
     	.attr("fill", function(d) { return "blue" })
 }
 
-/*
+
 
 function getSameDirector()
 {
@@ -99,10 +101,11 @@ function fillNeighbour()
 
 function insertNeighbours(rownums, relation)
 {
-	var buffer = neighboursName.length();
+	var buffer = neighbours.name.length();
 
 	for(var i = 0 ; i < rownums.length() ; i++)
 	{
+		var diff = rownums[i]].releaseDate - currMovie.releaseDate;
 		
 		neighbours[i + buffer] = {
 			"name":dataset[rownums[i]].name,
@@ -110,6 +113,23 @@ function insertNeighbours(rownums, relation)
 			"timeDistance":dataset[rownums[i]].releaseDate - currMovie.releaseDate
 		};
 	}	
+}
+
+function neighboursToNodes(neighbours)
+{
+	var allYears = objArray.map(function(neighbours) {return neighbours.year;});
+	x = d3.scale.linear()
+            .domain(d3.extent(allYears)
+            .range([0, w]);
+	
+	for(var i = 0 ; i < neighbours.length() ; i++)
+	{
+		var x = x(neighbours[i].timeDistance);
+		var y = h/2;
+		var radius = neighbours[i].polpularity;
+	}	
+	
+	
 }
 
 
@@ -120,4 +140,4 @@ svg.append("text")
          .attr("font-family", "sans-serif")
          .attr("font-size", "20px")
          .attr("fill", "blue");
-*/
+
