@@ -69,21 +69,21 @@ function draw()
 
 function getSameDirector()
 {
-	var rowNums = [];
+	var rowNums = [2, 3, 9];
 	
 	return rowNums;
 }
 
 function getSameActor()
 {
-	var rowNums = [];
+	var rowNums = [1, 3, 9];
 	
 	return rowNums;
 }
 
 function getSameActress()
 {
-	var rowNums = [];
+	var rowNums = [2, 7, 9];
 	
 	return rowNums;
 }
@@ -105,33 +105,54 @@ function insertNeighbours(rownums, relation)
 
 	for(var i = 0 ; i < rownums.length() ; i++)
 	{
-		var diff = rownums[i]].releaseDate - currMovie.releaseDate;
+		var diff = rownums[i].releaseDate - currMovie.releaseDate;
 		
 		neighbours[i + buffer] = {
 			"name":dataset[rownums[i]].name,
 			"relation":relation,
-			"timeDistance":dataset[rownums[i]].releaseDate - currMovie.releaseDate
+			"timeDistance":dataset[rownums[i]].releaseDate - currMovie.releaseDate,
+			"x":0,
+			"y":0,
+			"radius":dataset[rownums[i]].popularity
 		};
 	}	
 }
 
 function neighboursToNodes(neighbours)
 {
+	var neighboursNodes = [];
 	var allYears = objArray.map(function(neighbours) {return neighbours.year;});
 	x = d3.scale.linear()
-            .domain(d3.extent(allYears)
+            .domain(d3.extent(allYears))
             .range([0, w]);
 	
 	for(var i = 0 ; i < neighbours.length() ; i++)
 	{
-		var x = x(neighbours[i].timeDistance);
-		var y = h/2;
-		var radius = neighbours[i].polpularity;
+		neighbours[i].x = x(neighbours[i].timeDistance);
+		neighbours[i].y = h/2;
+		
+		// checks collisions
+		for(var j = 0 ; j < i ; j++)
+		{
+			var dist = distance(neighbours[i], neighbours[j])
+			
+			while(dist < 0)
+			{
+				// random number, either -1 or 1
+				var mult = Math.random()%2 * 2 - 1;
+				neighbours[i].y += mult * dist;
+			}
+		}
+		
 	}	
-	
 	
 }
 
+function distance(c1, c2)
+{
+	var dist = sqrt( (c1.x - c2.x)^2 + (c1.y - c2.y)^2 );
+	return dist - (c1.radius + c2.radius);
+}
 
 svg.append("text")
          .attr("x", 0)
