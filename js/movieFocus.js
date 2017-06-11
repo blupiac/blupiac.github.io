@@ -20,7 +20,20 @@ var svg = d3.select("body")
             .attr("width", w)
             .attr("height", h);
      
-               
+       
+
+d3.select(window).on("load", loadData);
+
+var neighbours = [];
+var currMovie;
+
+function loadData()
+{
+	currMovie = dataset[10];
+	fillNeighbour();
+	neighboursToNodes(neighbours);
+}
+	   
 d3.tsv("data/film.tsv")
 	.row(function (d, i) 
 	{
@@ -65,7 +78,7 @@ function draw()
     	.attr("fill", function(d) { return "blue" })
 }
 
-
+// 3 functions below are placeholders
 
 function getSameDirector()
 {
@@ -101,16 +114,14 @@ function fillNeighbour()
 
 function insertNeighbours(rownums, relation)
 {
-	var buffer = neighbours.name.length();
+	var buffer = neighbours.length;
 
-	for(var i = 0 ; i < rownums.length() ; i++)
-	{
-		var diff = rownums[i].releaseDate - currMovie.releaseDate;
-		
+	for(var i = 0 ; i < rownums.length ; i++)
+	{		
 		neighbours[i + buffer] = {
-			"name":dataset[rownums[i]].name,
+			"name":dataset[rownums[i]].title,
 			"relation":relation,
-			"timeDistance":dataset[rownums[i]].releaseDate - currMovie.releaseDate,
+			"timeDistance":dataset[rownums[i]].year - currMovie.year,
 			"x":0,
 			"y":0,
 			"radius":dataset[rownums[i]].popularity
@@ -121,28 +132,51 @@ function insertNeighbours(rownums, relation)
 function neighboursToNodes(neighbours)
 {
 	var neighboursNodes = [];
-	var allYears = objArray.map(function(neighbours) {return neighbours.year;});
+	var allYears = neighbours.map(function(neighbours) {return neighbours.timeDistance;});
 	x = d3.scale.linear()
             .domain(d3.extent(allYears))
             .range([0, w]);
 	
-	for(var i = 0 ; i < neighbours.length() ; i++)
+	for(var i = 0 ; i < neighbours.length ; i++)
 	{
 		neighbours[i].x = x(neighbours[i].timeDistance);
 		neighbours[i].y = h/2;
 		
+		collisionTolerance = 0.1;
+		
 		// checks collisions
 		for(var j = 0 ; j < i ; j++)
 		{
-			var dist = distance(neighbours[i], neighbours[j])
+			var dist = distance(neighbours[i], neighbours[j]);
 			
-			while(dist < 0)
+			// random number, either -1 or 1
+			var mult = Math.round(Math.random())%2 * 2 - 1;
+			
+			while(dist < -collisionTolerance)
 			{
-				// random number, either -1 or 1
-				var mult = Math.random()%2 * 2 - 1;
-				neighbours[i].y += mult * dist;
+				var tempNeighbour = {
+					"name":"temp",
+					"relation":"temp",
+					"timeDistance":0,
+					"x":neighbours[i].x,
+					"y":neighbours[i].y + mult * (dist-1),
+					"radius":neighbours[i].radius
+				};
+				
+				if(dist < distance(neighbours[i], tempNeighbour))
+				{
+					mult *= -1;
+				}
+				
+				// -1 helps when distqnce is very small
+				neighbours[i].y += mult * (dist-1);
+				console.log(mult, dist, neighbours[i].y);
+				
+				dist = distance(neighbours[i], neighbours[j]);
 			}
 		}
+		
+		console.log(neighbours[i].name, neighbours[i].x, neighbours[i].y, neighbours[i].timeDistance);
 		
 	}	
 	
@@ -150,9 +184,28 @@ function neighboursToNodes(neighbours)
 
 function distance(c1, c2)
 {
-	var dist = sqrt( (c1.x - c2.x)^2 + (c1.y - c2.y)^2 );
+	var dist = Math.sqrt( Math.pow(c1.x - c2.x, 2) + Math.pow(c1.y - c2.y, 2) );
 	return dist - (c1.radius + c2.radius);
 }
+
+var nodes = svg.selectAll("node")
+   .data(neighbours)
+   .enter()
+   .append("circle")
+   .attr("class", "node")
+   .attr("cx", function(d) {
+     return d.x
+   })
+   .attr("cy", function(d) {
+     return d.y
+   })
+   .attr("r", function(d) {
+     return d.radius
+   })
+   .attr("fill", function(d, i) {
+	   // placeholder
+     return "black";
+   })
 
 svg.append("text")
          .attr("x", 0)
