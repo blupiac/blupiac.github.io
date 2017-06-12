@@ -282,9 +282,12 @@ function neighboursToNodes(neighbours)
 {	
 	var neighboursNodes = [];
 	var allYears = neighbours.map(function(neighbours) {return neighbours.timeDistance;});
-	x = d3.scale.linear()
-            .domain(d3.extent(allYears))
-            .range([100, w-100]);
+	xMinus = d3.scale.linear()
+            .domain([d3.min(allYears),0])
+            .range([100, w/2]);
+	xPlus = d3.scale.linear()
+            .domain([0,d3.max(allYears)])
+            .range([w/2, w-100]);
 			
 	y = d3.scale.linear()
             .domain([0,1])
@@ -292,7 +295,14 @@ function neighboursToNodes(neighbours)
 	
 	for(var i = 1 ; i < neighbours.length ; i++)
 	{
-		neighbours[i].x = x(neighbours[i].timeDistance);
+		if(neighbours[i].timeDistance < 0)
+		{	
+			neighbours[i].x = xMinus(neighbours[i].timeDistance);
+		}
+		else
+		{
+			neighbours[i].x = xPlus(neighbours[i].timeDistance);
+		}
 		neighbours[i].y = y(Math.random());
 
 		collisionTolerance = 0.1;
