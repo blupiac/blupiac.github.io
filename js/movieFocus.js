@@ -22,7 +22,7 @@ var svg = d3.select("body")
      
        
 
-d3.select(window).on("load", loadData);
+//d3.select(window).on("load", loadData);
 
 var neighbours = [];
 var currMovie;
@@ -55,12 +55,13 @@ d3.tsv("data/film.tsv")
             console.log("First row: ", rows[1])
             console.log("Last  row: ", rows[rows.length-1])
         }
-        
+
         x = d3.scale.linear()
                 .domain(d3.extent(rows, function(row) { return neighbours.timeDistance; }))
                 .range([0, w]);
            
         dataset = rows;
+		loadData();
         draw();
 
    });
@@ -72,9 +73,9 @@ function draw()
         .data(neighbours)
         .enter()
         .append("circle")
-        .attr("r", function(d) { return 10 })
-        .attr("cx", function(d) { return x(neighbours.timeDistance) })
-    	.attr("cy", function(d) { return h/2 })
+        .attr("r", function(d) { return d.radius })
+        .attr("cx", function(d) { return d.x })
+    	.attr("cy", function(d) { return d.y })
     	.attr("fill", function(d) { return "blue" })
 }
 
@@ -117,7 +118,7 @@ function insertNeighbours(rownums, relation)
 	var buffer = neighbours.length;
 
 	for(var i = 0 ; i < rownums.length ; i++)
-	{		
+	{
 		neighbours[i + buffer] = {
 			"name":dataset[rownums[i]].title,
 			"relation":relation,
@@ -141,7 +142,7 @@ function neighboursToNodes(neighbours)
 	{
 		neighbours[i].x = x(neighbours[i].timeDistance);
 		neighbours[i].y = h/2;
-		
+
 		collisionTolerance = 0.1;
 		
 		// checks collisions
@@ -170,16 +171,11 @@ function neighboursToNodes(neighbours)
 				
 				// -1 helps when distqnce is very small
 				neighbours[i].y += mult * (dist-1);
-				console.log(mult, dist, neighbours[i].y);
 				
 				dist = distance(neighbours[i], neighbours[j]);
 			}
 		}
-		
-		console.log(neighbours[i].name, neighbours[i].x, neighbours[i].y, neighbours[i].timeDistance);
-		
 	}	
-	
 }
 
 function distance(c1, c2)
@@ -187,25 +183,6 @@ function distance(c1, c2)
 	var dist = Math.sqrt( Math.pow(c1.x - c2.x, 2) + Math.pow(c1.y - c2.y, 2) );
 	return dist - (c1.radius + c2.radius);
 }
-
-var nodes = svg.selectAll("node")
-   .data(neighbours)
-   .enter()
-   .append("circle")
-   .attr("class", "node")
-   .attr("cx", function(d) {
-     return d.x
-   })
-   .attr("cy", function(d) {
-     return d.y
-   })
-   .attr("r", function(d) {
-     return d.radius
-   })
-   .attr("fill", function(d, i) {
-	   // placeholder
-     return "black";
-   })
 
 svg.append("text")
          .attr("x", 0)
