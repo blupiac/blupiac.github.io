@@ -3,7 +3,7 @@ var h = 600;
 var x;                        
 var y;
 var dataset = [];
-var currMovie;
+var currMovie = 10;
 var neighbours = [];
 var links = [];
 var nodes = [];
@@ -23,14 +23,18 @@ var svg = d3.select("body")
             .attr("width", w)
             .attr("height", h);
 
-var neighbours = [];
-var currMovie;
 
 function loadData()
 {
-	currMovie = 10;
+	neighbours.length = 0;
+	links.length = 0;
+	nodes.length = 0;
+	
+	svg.selectAll("*").remove();
+	
 	fillNeighbour();
 	neighboursToNodes(neighbours);
+	draw();
 }
 
 d3.tsv("data/film.tsv")
@@ -57,8 +61,6 @@ d3.tsv("data/film.tsv")
      
         dataset = rows;
 		loadData();
-        draw();
-
    });
 
 
@@ -95,42 +97,51 @@ function draw()
 		.on("mouseover", function(d) {
 		  d3.select(this).style("fill", "green");
 		  svg.selectAll("text")
-		  	.text("Title: " + d.name + "  |   Popularity: " + d.radius)
+		  	.text("Title: " + d.name + 
+					" | Year: " + dataset[d.datasetIdx].year + 
+					" | Director: " + dataset[d.datasetIdx].director + 
+					" | Length: " + dataset[d.datasetIdx].length + "min" + 
+					" | Actor: " + dataset[d.datasetIdx].actor + 
+					" | Actress: " + dataset[d.datasetIdx].actress)
 		})                  
 		.on("mouseout", function(d) {
 		  d3.select(this).style("fill", "blue");
 		  svg.selectAll("text")
 		  	.text("Pass mouse over a movie")
-		});
+		})
+		.on("click", function(d) {
+		  currMovie = d.datasetIdx;
+		  loadData();
+		})
 		
 	svg.append("text")
          .attr("x", 0)
          .attr("y", h-25)
-         .text("Click on a movie")
+         .text("Pass mouse over a movie")
          .attr("font-family", "sans-serif")
-         .attr("font-size", "20px")
-         .attr("fill", "blue");
+         .attr("font-size", "16px")
+         .attr("fill", "black");
 }
 
 // 3 functions below are placeholders
 
 function getSameDirector()
 {
-	var rowNums = [2, 3, 9];
+	var rowNums = [currMovie+1, currMovie-1, currMovie+2];
 	
 	return rowNums;
 }
 
 function getSameActor()
 {
-	var rowNums = [1, 3, 9];
+	var rowNums = [currMovie+1, currMovie-2, currMovie+2];
 	
 	return rowNums;
 }
 
 function getSameActress()
 {
-	var rowNums = [2, 7, 9];
+	var rowNums = [currMovie+1, currMovie-3, currMovie+3];
 	
 	return rowNums;
 }
@@ -148,7 +159,8 @@ function fillNeighbour()
 		"timeDistance":0,
 		"x":w/2,
 		"y":h/2,
-		"radius":dataset[currMovie].popularity
+		"radius":dataset[currMovie].popularity,
+		"datasetIdx":currMovie
 	};	
 
 	insertNeighbours(sameDirector, "director");
@@ -184,7 +196,8 @@ function insertNeighbours(rownums, relation)
 				"timeDistance":dataset[rownums[i]].year - dataset[currMovie].year,
 				"x":0,
 				"y":0,
-				"radius":dataset[rownums[i]].popularity
+				"radius":dataset[rownums[i]].popularity,
+				"datasetIdx":rownums[i]
 			};
 			neighIndex++;
 		}
@@ -205,7 +218,6 @@ function neighboursToNodes(neighbours)
 	
 	for(var i = 1 ; i < neighbours.length ; i++)
 	{
-		//console.log(i, neighbours.length, neighbours[i]);
 		neighbours[i].x = x(neighbours[i].timeDistance);
 		neighbours[i].y = y(Math.random());
 
@@ -227,7 +239,8 @@ function neighboursToNodes(neighbours)
 					"timeDistance":0,
 					"x":neighbours[i].x,
 					"y":neighbours[i].y + mult * (dist-1),
-					"radius":neighbours[i].radius
+					"radius":neighbours[i].radius,
+					"datasetIdx":0
 				};
 				
 				if(dist < distance(neighbours[i], tempNeighbour))
@@ -242,9 +255,6 @@ function neighboursToNodes(neighbours)
 			}
 		}
 	}
-	
-	for(var i = 0 ; i < neighbours.length ; i++)
-		console.log(i, neighbours.length, neighbours[i]);
 }
 
 function distance(c1, c2)
