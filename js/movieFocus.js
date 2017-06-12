@@ -1,10 +1,12 @@
 var w = 1200;
-var h = 800;
+var h = 600;
 var x;                        
 var y;
 var dataset = [];
 var currMovie;
 var neighbours = [];
+var links = [];
+var nodes = [];
 
 /*
 var neighboursName = [];
@@ -62,7 +64,7 @@ d3.tsv("data/film.tsv")
 
 function draw() 
 {
-	svg.selectAll("link")
+	links = svg.selectAll("link")
 		.data(neighbours)
 		.enter()
 		.append("line")
@@ -82,7 +84,7 @@ function draw()
 	   .attr("fill", "none")
 	   .attr("stroke", "black");
 
-    svg.selectAll("circle")
+    nodes = svg.selectAll("node")
         .data(neighbours)
         .enter()
         .append("circle")
@@ -90,6 +92,24 @@ function draw()
         .attr("cx", function(d) { return d.x })
     	.attr("cy", function(d) { return d.y })
     	.attr("fill", function(d) { return "blue" })
+		.on("mouseover", function(d) {
+		  d3.select(this).style("fill", "green");
+		  svg.selectAll("text")
+		  	.text("Title: " + d.name + "  |   Popularity: " + d.radius)
+		})                  
+		.on("mouseout", function(d) {
+		  d3.select(this).style("fill", "blue");
+		  svg.selectAll("text")
+		  	.text("Pass mouse over a movie")
+		});
+		
+	svg.append("text")
+         .attr("x", 0)
+         .attr("y", h-25)
+         .text("Click on a movie")
+         .attr("font-family", "sans-serif")
+         .attr("font-size", "20px")
+         .attr("fill", "blue");
 }
 
 // 3 functions below are placeholders
@@ -178,12 +198,16 @@ function neighboursToNodes(neighbours)
 	x = d3.scale.linear()
             .domain(d3.extent(allYears))
             .range([100, w-100]);
+			
+	y = d3.scale.linear()
+            .domain([0,1])
+            .range([100, h-150]);
 	
 	for(var i = 1 ; i < neighbours.length ; i++)
 	{
 		//console.log(i, neighbours.length, neighbours[i]);
 		neighbours[i].x = x(neighbours[i].timeDistance);
-		neighbours[i].y = h/2;
+		neighbours[i].y = y(Math.random());
 
 		collisionTolerance = 0.1;
 		
@@ -236,4 +260,3 @@ svg.append("text")
          .attr("font-family", "sans-serif")
          .attr("font-size", "20px")
          .attr("fill", "blue");
-
