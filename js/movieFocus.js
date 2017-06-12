@@ -93,7 +93,7 @@ function draw()
         .attr("r", function(d) { return d.radius })
         .attr("cx", function(d) { return d.x })
     	.attr("cy", function(d) { return d.y })
-    	.attr("fill", function(d) { return "blue" })
+    	.attr("fill", subjectColor)
 		.on("mouseover", function(d) {
 		  d3.select(this).style("fill", "green");
 		  svg.selectAll("text")
@@ -105,9 +105,9 @@ function draw()
 					" | Actress: " + dataset[d.datasetIdx].actress)
 		})                  
 		.on("mouseout", function(d) {
-		  d3.select(this).style("fill", "blue");
+		  d3.select(this).style("fill", subjectColor);
 		  svg.selectAll("text")
-		  	.text("Pass mouse over a movie")
+		  	.text("Pass mouse over a movie for info, click to see its own graph")
 		})
 		.on("click", function(d) {
 		  currMovie = d.datasetIdx;
@@ -117,12 +117,24 @@ function draw()
 	svg.append("text")
          .attr("x", 0)
          .attr("y", h-25)
-         .text("Pass mouse over a movie")
+         .text("Pass mouse over a movie for info, click to see its own graph")
          .attr("font-family", "sans-serif")
          .attr("font-size", "16px")
          .attr("fill", "black");
 }
 
+function subjectColor(d)
+{
+	switch(dataset[d.datasetIdx].subject.toLowerCase()) {
+		case "comedy":
+			return "pink";
+		case "action":
+			return "red";
+		default:
+			return "blue";
+	}
+}
+			
 // 3 functions below are placeholders
 
 function getSameDirector()
