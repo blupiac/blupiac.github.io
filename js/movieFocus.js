@@ -139,10 +139,10 @@ function fillNeighbour()
 function insertNeighbours(rownums, relation)
 {
 	var buffer = neighbours.length;
-
+	var neighIndex = neighbours.length;
+	
 	for(var i = 0 ; i < rownums.length ; i++)
 	{
-/*
 		var exists = -1;
 		for(var j = 1 ; j < neighbours.length ; j++)
 		{
@@ -157,23 +157,22 @@ function insertNeighbours(rownums, relation)
 			neighbours[exists].relation.push(relation);
 		}
 		else
-		{*/
-			neighbours[i + buffer] = {
+		{
+			neighbours[neighIndex] = {
 				"name":dataset[rownums[i]].title,
 				"relation":[relation],
 				"timeDistance":dataset[rownums[i]].year - dataset[currMovie].year,
 				"x":0,
 				"y":0,
 				"radius":dataset[rownums[i]].popularity
-//			};
+			};
+			neighIndex++;
 		}
-
-		
 	}
 }
 
 function neighboursToNodes(neighbours)
-{
+{	
 	var neighboursNodes = [];
 	var allYears = neighbours.map(function(neighbours) {return neighbours.timeDistance;});
 	x = d3.scale.linear()
@@ -182,6 +181,7 @@ function neighboursToNodes(neighbours)
 	
 	for(var i = 1 ; i < neighbours.length ; i++)
 	{
+		//console.log(i, neighbours.length, neighbours[i]);
 		neighbours[i].x = x(neighbours[i].timeDistance);
 		neighbours[i].y = h/2;
 
@@ -211,13 +211,16 @@ function neighboursToNodes(neighbours)
 					mult *= -1;
 				}
 				
-				// -1 helps when distqnce is very small
+				// -1 helps when distance is very small
 				neighbours[i].y += mult * (dist-1);
 				
 				dist = distance(neighbours[i], neighbours[j]);
 			}
 		}
-	}	
+	}
+	
+	for(var i = 0 ; i < neighbours.length ; i++)
+		console.log(i, neighbours.length, neighbours[i]);
 }
 
 function distance(c1, c2)
