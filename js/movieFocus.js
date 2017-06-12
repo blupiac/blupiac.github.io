@@ -66,7 +66,8 @@ d3.tsv("data/film.tsv")
 
 function draw() 
 {
-	links = svg.selectAll("link")
+	// first dashed line for movies that have more than 1 thing in common
+	svg.selectAll("link")
 		.data(neighbours)
 		.enter()
 		.append("line")
@@ -83,10 +84,29 @@ function draw()
 		.attr("y2", function(n) {
 			return n.y
 		})
-	   .attr("fill", "none")
-	   .attr("stroke", "black");
+	   .attr("style", relationEdgeStyleSolid)
+   // second solid line for background, will be same color as 1st line is 
+   // movies have only 1 thing in common
+	svg.selectAll("link")
+		.data(neighbours)
+		.enter()
+		.append("line")
+		.attr("class", "link")
+		.attr("x1", function() {
+			return neighbours[0].x
+		})
+		.attr("y1", function() {
+			return neighbours[0].y
+		})
+		.attr("x2", function(n) {
+			return n.x
+		})
+		.attr("y2", function(n) {
+			return n.y
+		})
+	   .attr("style", relationEdgeStyleDashed)
 
-    nodes = svg.selectAll("node")
+    svg.selectAll("node")
         .data(neighbours)
         .enter()
         .append("circle")
@@ -134,12 +154,54 @@ function subjectColor(d)
 			return "blue";
 	}
 }
+
+function relationEdgeStyleSolid(d)
+{
+	switch(d.relation[0]) {
+		case "actress":
+			return "stroke:#FFC0CB;stroke-width: 5;fill: none;";
+		case "actor":
+			return "stroke:#FF0000;stroke-width: 5;fill: none;";
+		default:
+			return "stroke:#0000FF;stroke-width: 5;fill: none;";
+	}
+}
+
+function relationEdgeStyleDashed(d)
+{
+	if(d.relation.length == 1)
+	{
+		switch(d.relation[0]) {
+			case "actress":
+				return "stroke:#FFC0CB;stroke-width: 5";
+			case "actor":
+				return "stroke:#FF0000;stroke-width: 5";
+			default:
+				return "stroke:#0000FF;stroke-width: 5";
+		}
+	}
+	else if(d.relation.length == 2)
+	{
+		switch(d.relation[1]) {
+			case "actress":
+				return "stroke:#FFC0CB;stroke-width: 5;stroke-dasharray: 5,5";
+			case "actor":
+				return "stroke:#FF0000;stroke-width: 5;stroke-dasharray: 5,5";
+			default:
+				return "stroke:#0000FF;stroke-width: 5;stroke-dasharray: 5,5";
+		}
+	}
+	else
+	{
+		return "stroke:#FFD700;stroke-width: 10;fill: none;"
+	}
+}
 			
 // 3 functions below are placeholders
 
 function getSameDirector()
 {
-	var rowNums = [currMovie+1, currMovie-1, currMovie+2];
+	var rowNums = [currMovie+1, currMovie-1, currMovie+2, currMovie-3];
 	
 	return rowNums;
 }
@@ -153,7 +215,7 @@ function getSameActor()
 
 function getSameActress()
 {
-	var rowNums = [currMovie+1, currMovie-3, currMovie+3];
+	var rowNums = [currMovie+1, currMovie-3, currMovie+3, currMovie-2,];
 	
 	return rowNums;
 }
