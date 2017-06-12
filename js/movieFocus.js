@@ -222,18 +222,22 @@ function getSameActress()
 
 function fillNeighbour()
 {
-	var current = [currMovie];
 	var sameDirector = getSameDirector();
 	var sameActor = getSameActor();
 	var sameActress = getSameActress();	
 
+	// size <10 is hard to click on
+	p = d3.scale.linear()
+            .domain([0,100])
+            .range([10, 100]);
+	
 	neighbours[0] = {
 		"name":dataset[currMovie].title,
 		"relation":"current",
 		"timeDistance":0,
 		"x":w/2,
 		"y":h/2,
-		"radius":dataset[currMovie].popularity,
+		"radius":p(dataset[currMovie].popularity),
 		"datasetIdx":currMovie
 	};	
 
@@ -246,6 +250,11 @@ function insertNeighbours(rownums, relation)
 {
 	var buffer = neighbours.length;
 	var neighIndex = neighbours.length;
+	
+	// size <10 is hard to click on
+	p = d3.scale.linear()
+            .domain([0,100])
+            .range([10, 100]);
 	
 	for(var i = 0 ; i < rownums.length ; i++)
 	{
@@ -270,7 +279,7 @@ function insertNeighbours(rownums, relation)
 				"timeDistance":dataset[rownums[i]].year - dataset[currMovie].year,
 				"x":0,
 				"y":0,
-				"radius":dataset[rownums[i]].popularity,
+				"radius":p(dataset[rownums[i]].popularity),
 				"datasetIdx":rownums[i]
 			};
 			neighIndex++;
