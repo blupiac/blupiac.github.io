@@ -1,5 +1,5 @@
-var w = 600;
-var h = 600;
+var w = 1200;
+var h = 800;
 var x;                        
 var y;
 var dataset = [];
@@ -12,7 +12,7 @@ var neighboursRelation = [];
 var neighboursTimeDistance = [];
 */
 
-// https://stackoverflow.com/questions/28102089/simple-graph-of-nodes-and-links-without-using-force-layout <- use this?
+// https://stackoverflow.com/questions/28102089/simple-graph-of-nodes-and-links-without-using-force-layout
 
 
 //Create SVG element
@@ -62,6 +62,26 @@ d3.tsv("data/film.tsv")
 
 function draw() 
 {
+	svg.selectAll("link")
+		.data(neighbours)
+		.enter()
+		.append("line")
+		.attr("class", "link")
+		.attr("x1", function() {
+			return neighbours[0].x
+		})
+		.attr("y1", function() {
+			return neighbours[0].y
+		})
+		.attr("x2", function(n) {
+			return n.x
+		})
+		.attr("y2", function(n) {
+			return n.y
+		})
+	   .attr("fill", "none")
+	   .attr("stroke", "black");
+
     svg.selectAll("circle")
         .data(neighbours)
         .enter()
@@ -120,19 +140,36 @@ function insertNeighbours(rownums, relation)
 {
 	var buffer = neighbours.length;
 
-	console.log(rownums);
-
 	for(var i = 0 ; i < rownums.length ; i++)
 	{
-		neighbours[i + buffer] = {
-			"name":dataset[rownums[i]].title,
-			"relation":relation,
-			"timeDistance":dataset[rownums[i]].year - dataset[currMovie].year,
-			"x":0,
-			"y":0,
-			"radius":dataset[rownums[i]].popularity
-		};
-	}	
+/*
+		var exists = -1;
+		for(var j = 1 ; j < neighbours.length ; j++)
+		{
+			if( neighbours[j].name === dataset[rownums[i]].title )
+			{
+				exists = j;
+			}
+		}
+
+		if(exists != -1)
+		{
+			neighbours[exists].relation.push(relation);
+		}
+		else
+		{*/
+			neighbours[i + buffer] = {
+				"name":dataset[rownums[i]].title,
+				"relation":[relation],
+				"timeDistance":dataset[rownums[i]].year - dataset[currMovie].year,
+				"x":0,
+				"y":0,
+				"radius":dataset[rownums[i]].popularity
+//			};
+		}
+
+		
+	}
 }
 
 function neighboursToNodes(neighbours)
