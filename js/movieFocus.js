@@ -5,6 +5,7 @@ var y;
 var dataset = [];
 var currMovie;
 var neighbours = [];
+
 /*
 var neighboursName = [];
 var neighboursRelation = [];
@@ -19,21 +20,17 @@ var svg = d3.select("body")
             .append("svg")
             .attr("width", w)
             .attr("height", h);
-     
-       
-
-//d3.select(window).on("load", loadData);
 
 var neighbours = [];
 var currMovie;
 
 function loadData()
 {
-	currMovie = dataset[10];
+	currMovie = 10;
 	fillNeighbour();
 	neighboursToNodes(neighbours);
 }
-	   
+
 d3.tsv("data/film.tsv")
 	.row(function (d, i) 
 	{
@@ -55,11 +52,7 @@ d3.tsv("data/film.tsv")
             console.log("First row: ", rows[1])
             console.log("Last  row: ", rows[rows.length-1])
         }
-
-        x = d3.scale.linear()
-                .domain(d3.extent(rows, function(row) { return neighbours.timeDistance; }))
-                .range([0, w]);
-           
+     
         dataset = rows;
 		loadData();
         draw();
@@ -104,10 +97,20 @@ function getSameActress()
 
 function fillNeighbour()
 {
+	var current = [currMovie];
 	var sameDirector = getSameDirector();
 	var sameActor = getSameActor();
-	var sameActress = getSameActress();
-	
+	var sameActress = getSameActress();	
+
+	neighbours[0] = {
+		"name":dataset[currMovie].title,
+		"relation":"current",
+		"timeDistance":0,
+		"x":w/2,
+		"y":h/2,
+		"radius":dataset[currMovie].popularity
+	};	
+
 	insertNeighbours(sameDirector, "director");
 	insertNeighbours(sameActor, "actor");
 	insertNeighbours(sameActress, "actress");
@@ -117,12 +120,14 @@ function insertNeighbours(rownums, relation)
 {
 	var buffer = neighbours.length;
 
+	console.log(rownums);
+
 	for(var i = 0 ; i < rownums.length ; i++)
 	{
 		neighbours[i + buffer] = {
 			"name":dataset[rownums[i]].title,
 			"relation":relation,
-			"timeDistance":dataset[rownums[i]].year - currMovie.year,
+			"timeDistance":dataset[rownums[i]].year - dataset[currMovie].year,
 			"x":0,
 			"y":0,
 			"radius":dataset[rownums[i]].popularity
@@ -136,9 +141,9 @@ function neighboursToNodes(neighbours)
 	var allYears = neighbours.map(function(neighbours) {return neighbours.timeDistance;});
 	x = d3.scale.linear()
             .domain(d3.extent(allYears))
-            .range([0, w]);
+            .range([100, w-100]);
 	
-	for(var i = 0 ; i < neighbours.length ; i++)
+	for(var i = 1 ; i < neighbours.length ; i++)
 	{
 		neighbours[i].x = x(neighbours[i].timeDistance);
 		neighbours[i].y = h/2;
