@@ -239,7 +239,6 @@ function draw(){
 
 // Alert some text if there has been changes to the anchor part
 function loadFocus() {
-	
 	window.location.href = window.location.href.replace("index", "focus");
 }
 	

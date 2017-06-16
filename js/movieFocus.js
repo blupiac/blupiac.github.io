@@ -7,7 +7,7 @@ var graph_LR_y = 600;
 var x;                        
 var y;
 var dataset = [];
-var currMovie = 600;
+var currMovie;
 var neighbours = [];
 var links = [];
 var nodes = [];
@@ -331,6 +331,26 @@ function draw()
          .attr("font-family", "sans-serif")
          .attr("font-size", "16px")
          .attr("fill", "black");
+		 
+	svg.append("text")
+        .attr("x", graph_LR_x/2 - 65)
+        .attr("y", graph_LR_y + 150)
+        .text("Back to movie selection")
+        .attr("font-family", "sans-serif")
+        .attr("font-size", "16px")
+        .attr("fill", "blue")
+		.on("mouseover", function(d) {
+			d3.select(this).style("cursor", "pointer");
+			d3.select(this).style("text-decoration", "underline");
+		})
+		.on("mouseout", function(d) {
+			d3.select(this).style("cursor", "default");
+			d3.select(this).style("text-decoration", "none");
+		})
+		.on("click", function(d) {
+			window.location.hash = "";
+			window.location.href = window.location.href.replace("focus", "index");
+		});
 }
 
 function relationEdgeStyleSolid(d)
