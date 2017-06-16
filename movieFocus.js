@@ -3,24 +3,18 @@ var h = 800;
 var x;                        
 var y;
 var dataset = [];
-var currMovie = 600;
+var currMovie = 10;
 var neighbours = [];
 var links = [];
 var nodes = [];
 
-var color = d3.scale.ordinal()
-			.domain(["","Comedy", "Action", "Drama", "Adventure", "Mystery", "Western", "Music", "Horror", "War", "Crime"])
-			.range(["#999", "#00CED1", "#32CD32", "#FF1493", "#FF4500", "#A020F0", "#6495ED", "#2F4F4F", "#836FFF", "#FA8072", "#CD853F"]);
+/*
+var neighboursName = [];
+var neighboursRelation = [];
+var neighboursTimeDistance = [];
+*/
 
-var color_hover = d3.scale.ordinal()
-			.domain(["","Comedy", "Action", "Drama", "Adventure", "Mystery", "Western", "Music", "Horror", "War", "Crime"])
-			.range(["#999", "#10DEF1", "#42DD42", "#FF24A3", "#FF5510", "#B030F0", "#74A5FD", "#3F5F5F", "#937FFF", "#FA9082", "#DD954F"]);
-
-var color_stroke = d3.scale.ordinal()
-					.domain(["No", "Yes"])
-					.range(["none", "yellow"]);
-
-// loosely based on https://stackoverflow.com/questions/28102089/simple-graph-of-nodes-and-links-without-using-force-layout
+// https://stackoverflow.com/questions/28102089/simple-graph-of-nodes-and-links-without-using-force-layout
 
 
 //Create SVG element
@@ -119,10 +113,9 @@ function draw()
         .attr("r", function(d) { return d.radius })
         .attr("cx", function(d) { return d.x })
     	.attr("cy", function(d) { return d.y })
-    	.attr("fill", function(d) { return color(dataset[d.datasetIdx].subject)} )
-		.style("stroke", function(d) { return color_stroke(dataset[d.datasetIdx].awards);})
+    	.attr("fill", subjectColor)
 		.on("mouseover", function(d) {
-		  d3.select(this).style("fill", function(d) { return color_hover(dataset[d.datasetIdx].subject)});
+		  d3.select(this).style("fill", "green");
 		  svg.select("text#description")
 		  	.text("Title: " + d.name + 
 					" | Year: " + dataset[d.datasetIdx].year + 
@@ -132,7 +125,7 @@ function draw()
 					" | Actress: " + dataset[d.datasetIdx].actress)
 		})                  
 		.on("mouseout", function(d) {
-		  d3.select(this).style("fill", function(d) { return color(dataset[d.datasetIdx].subject)});
+		  d3.select(this).style("fill", subjectColor);
 		  svg.select("text#description")
 		  	.text("Pass mouse over a movie for info, click to see its own graph")
 		})
@@ -141,113 +134,6 @@ function draw()
 		  loadData();
 		})
 		
-	svg.append("line")
-		.attr("x1", w-120)
-		.attr("y1", 100)
-		.attr("x2", w-10)
-		.attr("y2", 100)
-		.attr("style", "stroke:#FFC0CB;stroke-width: 5;fill: none;")
-
-	svg.append("text")
-         .attr("x", w-120)
-         .attr("y", 120)
-         .text("Same actress")
-         .attr("font-family", "sans-serif")
-         .attr("font-size", "16px")
-         .attr("fill", "black");
-
-	svg.append("line")
-		.attr("x1", w-120)
-		.attr("y1", 140)
-		.attr("x2", w-10)
-		.attr("y2", 140)
-		.attr("style", "stroke:#FF0000;stroke-width: 5;fill: none;")
-
-	svg.append("text")
-         .attr("x", w-120)
-         .attr("y", 160)
-         .text("Same actor")
-         .attr("font-family", "sans-serif")
-         .attr("font-size", "16px")
-         .attr("fill", "black");
-
-	svg.append("line")
-		.attr("x1", w-120)
-		.attr("y1", 180)
-		.attr("x2", w-10)
-		.attr("y2", 180)
-		.attr("style", "stroke:#0000FF;stroke-width: 5;fill: none;")
-
-	svg.append("text")
-         .attr("x", w-120)
-         .attr("y", 200)
-         .text("Same director")
-         .attr("font-family", "sans-serif")
-         .attr("font-size", "16px")
-         .attr("fill", "black");
-
-	svg.append("line")
-		.attr("x1", w-120)
-		.attr("y1", 220)
-		.attr("x2", w-10)
-		.attr("y2", 220)
-		.attr("style", "stroke:#0000FF;stroke-width: 5;fill: none;")
-
-	svg.append("line")
-		.attr("x1", w-120)
-		.attr("y1", 220)
-		.attr("x2", w-10)
-		.attr("y2", 220)
-		.attr("style", "stroke:#FF0000;stroke-width: 5;stroke-dasharray: 5,5")
-
-	svg.append("text")
-         .attr("x", w-120)
-         .attr("y", 240)
-         .text("Same of both")
-         .attr("font-family", "sans-serif")
-         .attr("font-size", "16px")
-         .attr("fill", "black");
-
-	svg.append("text")
-         .attr("x", w-120)
-         .attr("y", 255)
-         .text("colors")
-         .attr("font-family", "sans-serif")
-         .attr("font-size", "16px")
-         .attr("fill", "black");
-
-	svg.append("line")
-		.attr("x1", w-120)
-		.attr("y1", 270)
-		.attr("x2", w-10)
-		.attr("y2", 270)
-		.attr("style", "stroke:#FFD700;stroke-width: 10;fill: none;")
-
-	svg.append("text")
-         .attr("x", w-120)
-         .attr("y", 290)
-         .text("Same actor,")
-         .attr("font-family", "sans-serif")
-         .attr("font-size", "16px")
-         .attr("fill", "black");
-
-	svg.append("text")
-         .attr("x", w-120)
-         .attr("y", 305)
-         .text("director &")
-         .attr("font-family", "sans-serif")
-         .attr("font-size", "16px")
-         .attr("fill", "black");
-
-	svg.append("text")
-         .attr("x", w-120)
-         .attr("y", 320)
-         .text("actress")
-         .attr("font-family", "sans-serif")
-         .attr("font-size", "16px")
-         .attr("fill", "black");
-
-
 	svg.append("svg:defs").append("svg:marker")
 							.attr("id", "triangle")
 							.attr("refX", 0)
@@ -270,40 +156,16 @@ function draw()
 						
 	svg.append("line").attr("x1", w/2)
 						.attr("y1", h-100)
-						.attr("x2", w-200)
+						.attr("x2", w-50)
 						.attr("y2", h-100)
 						.attr("stroke-width", 2)
 						.attr("stroke", "black")
 						.attr("marker-end", "url(#triangle)");
 	
 	svg.append("text")
-         .attr("x", w/2 - 16)
+         .attr("x", w/2)
          .attr("y", h-80)
          .text(function(d) { return dataset[currMovie].year })
-         .attr("font-family", "sans-serif")
-         .attr("font-size", "16px")
-         .attr("fill", "black");
-
-	svg.append("text")
-         .attr("x", 50)
-         .attr("y", h-80)
-         .text(function(d) 
-				{ 
-					var allYears = neighbours.map(function(neighbours) {return neighbours.timeDistance;})
-					return dataset[currMovie].year + d3.min(allYears);
-				})
-         .attr("font-family", "sans-serif")
-         .attr("font-size", "16px")
-         .attr("fill", "black");
-
-	svg.append("text")
-         .attr("x", w-240)
-         .attr("y", h-80)
-         .text(function(d) 
-				{ 
-					var allYears = neighbours.map(function(neighbours) {return neighbours.timeDistance;})
-					return dataset[currMovie].year + d3.max(allYears);
-				})
          .attr("font-family", "sans-serif")
          .attr("font-size", "16px")
          .attr("fill", "black");
@@ -317,6 +179,18 @@ function draw()
          .attr("font-size", "16px")
          .attr("fill", "black");
 
+}
+
+function subjectColor(d)
+{
+	switch(dataset[d.datasetIdx].subject.toLowerCase()) {
+		case "comedy":
+			return "pink";
+		case "action":
+			return "red";
+		default:
+			return "blue";
+	}
 }
 
 function relationEdgeStyleSolid(d)
@@ -393,7 +267,7 @@ function fillNeighbour()
 	// size <10 is hard to click on
 	p = d3.scale.linear()
             .domain([0,100])
-            .range([10, 50]);
+            .range([10, 100]);
 	
 	neighbours[0] = {
 		"name":dataset[currMovie].title,
@@ -418,7 +292,7 @@ function insertNeighbours(rownums, relation)
 	// size <10 is hard to click on
 	p = d3.scale.linear()
             .domain([0,100])
-            .range([10, 50]);
+            .range([10, 100]);
 	
 	for(var i = 0 ; i < rownums.length ; i++)
 	{
@@ -460,11 +334,11 @@ function neighboursToNodes(neighbours)
             .range([100, w/2]);
 	xPlus = d3.scale.linear()
             .domain([0,d3.max(allYears)])
-            .range([w/2, w-200]);
+            .range([w/2, w-100]);
 			
 	y = d3.scale.linear()
             .domain([0,1])
-            .range([100, h-200]);
+            .range([100, h-150]);
 	
 	for(var i = 1 ; i < neighbours.length ; i++)
 	{
@@ -527,4 +401,3 @@ svg.append("text")
          .attr("font-family", "sans-serif")
          .attr("font-size", "20px")
          .attr("fill", "blue");
-
