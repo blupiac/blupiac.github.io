@@ -1,5 +1,9 @@
 var w = 800;
 var h = 800;
+var graph_UL_x = 50;
+var graph_UL_y = 50;
+var graph_LR_x = 600;
+var graph_LR_y = 600;
 var x;                        
 var y;
 var dataset = [];
@@ -142,14 +146,14 @@ function draw()
 		})
 		
 	svg.append("line")
-		.attr("x1", w-120)
+		.attr("x1", graph_LR_y + 70)
 		.attr("y1", 100)
 		.attr("x2", w-10)
 		.attr("y2", 100)
 		.attr("style", "stroke:#FFC0CB;stroke-width: 5;fill: none;")
 
 	svg.append("text")
-         .attr("x", w-120)
+         .attr("x", graph_LR_y + 70)
          .attr("y", 120)
          .text("Same actress")
          .attr("font-family", "sans-serif")
@@ -157,14 +161,14 @@ function draw()
          .attr("fill", "black");
 
 	svg.append("line")
-		.attr("x1", w-120)
+		.attr("x1", graph_LR_y + 70)
 		.attr("y1", 140)
 		.attr("x2", w-10)
 		.attr("y2", 140)
 		.attr("style", "stroke:#FF0000;stroke-width: 5;fill: none;")
 
 	svg.append("text")
-         .attr("x", w-120)
+         .attr("x", graph_LR_y + 70)
          .attr("y", 160)
          .text("Same actor")
          .attr("font-family", "sans-serif")
@@ -172,14 +176,14 @@ function draw()
          .attr("fill", "black");
 
 	svg.append("line")
-		.attr("x1", w-120)
+		.attr("x1", graph_LR_y + 70)
 		.attr("y1", 180)
 		.attr("x2", w-10)
 		.attr("y2", 180)
 		.attr("style", "stroke:#0000FF;stroke-width: 5;fill: none;")
 
 	svg.append("text")
-         .attr("x", w-120)
+         .attr("x", graph_LR_y + 70)
          .attr("y", 200)
          .text("Same director")
          .attr("font-family", "sans-serif")
@@ -187,21 +191,21 @@ function draw()
          .attr("fill", "black");
 
 	svg.append("line")
-		.attr("x1", w-120)
+		.attr("x1", graph_LR_y + 70)
 		.attr("y1", 220)
 		.attr("x2", w-10)
 		.attr("y2", 220)
 		.attr("style", "stroke:#0000FF;stroke-width: 5;fill: none;")
 
 	svg.append("line")
-		.attr("x1", w-120)
+		.attr("x1", graph_LR_y + 70)
 		.attr("y1", 220)
 		.attr("x2", w-10)
 		.attr("y2", 220)
 		.attr("style", "stroke:#FF0000;stroke-width: 5;stroke-dasharray: 5,5")
 
 	svg.append("text")
-         .attr("x", w-120)
+         .attr("x", graph_LR_y + 70)
          .attr("y", 240)
          .text("Same of both")
          .attr("font-family", "sans-serif")
@@ -209,7 +213,7 @@ function draw()
          .attr("fill", "black");
 
 	svg.append("text")
-         .attr("x", w-120)
+         .attr("x", graph_LR_y + 70)
          .attr("y", 255)
          .text("colors")
          .attr("font-family", "sans-serif")
@@ -217,14 +221,14 @@ function draw()
          .attr("fill", "black");
 
 	svg.append("line")
-		.attr("x1", w-120)
+		.attr("x1", graph_LR_y + 70)
 		.attr("y1", 270)
 		.attr("x2", w-10)
 		.attr("y2", 270)
 		.attr("style", "stroke:#FFD700;stroke-width: 10;fill: none;")
 
 	svg.append("text")
-         .attr("x", w-120)
+         .attr("x", graph_LR_y + 70)
          .attr("y", 290)
          .text("Same actor,")
          .attr("font-family", "sans-serif")
@@ -232,7 +236,7 @@ function draw()
          .attr("fill", "black");
 
 	svg.append("text")
-         .attr("x", w-120)
+         .attr("x", graph_LR_y + 70)
          .attr("y", 305)
          .text("director &")
          .attr("font-family", "sans-serif")
@@ -240,7 +244,7 @@ function draw()
          .attr("fill", "black");
 
 	svg.append("text")
-         .attr("x", w-120)
+         .attr("x", graph_LR_y + 70)
          .attr("y", 320)
          .text("actress")
          .attr("font-family", "sans-serif")
@@ -260,33 +264,33 @@ function draw()
 							.attr("d", "M 0 0 L 10 5 L 0 10 z")
 							.style("fill", "black");
 	
-	svg.append("line").attr("x1", w/2)
-						.attr("y1", h-100)
-						.attr("x2", 50)
-						.attr("y2", h-100)
+	svg.append("line").attr("x1", graph_LR_x/2)
+						.attr("y1", graph_LR_y +100)
+						.attr("x2", graph_UL_x)
+						.attr("y2", graph_LR_y + 100)
 						.attr("stroke-width", 2)
 						.attr("stroke", "black")
 						.attr("marker-end", "url(#triangle)");
 						
-	svg.append("line").attr("x1", w/2)
+	svg.append("line").attr("x1", graph_LR_x/2)
 						.attr("y1", h-100)
-						.attr("x2", w-200)
+						.attr("x2", graph_LR_x)
 						.attr("y2", h-100)
 						.attr("stroke-width", 2)
 						.attr("stroke", "black")
 						.attr("marker-end", "url(#triangle)");
 	
 	svg.append("text")
-         .attr("x", w/2 - 16)
-         .attr("y", h-80)
+         .attr("x", graph_LR_x/2)
+         .attr("y", graph_LR_y + 120)
          .text(function(d) { return dataset[currMovie].year })
          .attr("font-family", "sans-serif")
          .attr("font-size", "16px")
          .attr("fill", "black");
 
 	svg.append("text")
-         .attr("x", 50)
-         .attr("y", h-80)
+         .attr("x", graph_UL_x)
+         .attr("y", graph_LR_y + 120)
          .text(function(d) 
 				{ 
 					var allYears = neighbours.map(function(neighbours) {return neighbours.timeDistance;})
@@ -297,8 +301,8 @@ function draw()
          .attr("fill", "black");
 
 	svg.append("text")
-         .attr("x", w-240)
-         .attr("y", h-80)
+         .attr("x", graph_LR_x - 40)
+         .attr("y", graph_LR_y + 120)
          .text(function(d) 
 				{ 
 					var allYears = neighbours.map(function(neighbours) {return neighbours.timeDistance;})
@@ -399,8 +403,8 @@ function fillNeighbour()
 		"name":dataset[currMovie].title,
 		"relation":"current",
 		"timeDistance":0,
-		"x":w/2,
-		"y":h/2,
+		"x":graph_LR_x/2,
+		"y":graph_LR_y/2,
 		"radius":p(dataset[currMovie].popularity),
 		"datasetIdx":currMovie
 	};	
@@ -457,14 +461,14 @@ function neighboursToNodes(neighbours)
 	var allYears = neighbours.map(function(neighbours) {return neighbours.timeDistance;});
 	xMinus = d3.scale.linear()
             .domain([d3.min(allYears),0])
-            .range([100, w/2]);
+            .range([graph_UL_x, graph_LR_x/2]);
 	xPlus = d3.scale.linear()
             .domain([0,d3.max(allYears)])
-            .range([w/2, w-200]);
+            .range([graph_LR_x/2, graph_LR_x]);
 			
 	y = d3.scale.linear()
             .domain([0,1])
-            .range([100, h-200]);
+            .range([graph_UL_y, graph_LR_y]);
 	
 	for(var i = 1 ; i < neighbours.length ; i++)
 	{
