@@ -26,7 +26,6 @@ var color_stroke = d3.scale.ordinal()
 
 // loosely based on https://stackoverflow.com/questions/28102089/simple-graph-of-nodes-and-links-without-using-force-layout
 
-
 //Create SVG element
 var svg = d3.select("body")
             .append("svg")
@@ -116,6 +115,10 @@ function draw()
 		})
 	   .attr("style", relationEdgeStyleDashed)
 
+	var div = d3.select("body").append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 0);
+	   
     svg.selectAll("node")
         .data(neighbours)
         .enter()
@@ -126,22 +129,37 @@ function draw()
     	.attr("fill", function(d) { return color(dataset[d.datasetIdx].subject)} )
 		.style("stroke", function(d) { return color_stroke(dataset[d.datasetIdx].awards);})
 		.on("mouseover", function(d) {
-		  d3.select(this).style("fill", function(d) { return color_hover(dataset[d.datasetIdx].subject)});
-		  svg.select("text#description")
-		  	.text("Title: " + d.name + 
-					" | Year: " + dataset[d.datasetIdx].year + 
-					" | Director: " + dataset[d.datasetIdx].director + 
-					" | Length: " + dataset[d.datasetIdx].length + "min" + 
-					" | Actor: " + dataset[d.datasetIdx].actor + 
-					" | Actress: " + dataset[d.datasetIdx].actress)
-		})                  
+			
+			d3.select(this).style("fill", function(d) {
+					return color_hover(dataset[d.datasetIdx].subject)});
+			
+			div.transition()
+				.duration(200)
+				.style("opacity", .9)
+			
+			div.html( "<h1><b>" + d.name + ", "+
+								dataset[d.datasetIdx].year + "</b></h1><i>"  +
+								dataset[d.datasetIdx].subject + "</i><br/>" +
+								dataset[d.datasetIdx].director + "<br/>" +
+								dataset[d.datasetIdx].actress + "<br/>" +
+								dataset[d.datasetIdx].actor + "<br/><h1>" +
+								dataset[d.datasetIdx].popularity + " / 100</h1>" )
+            .style("left", (d3.event.pageX + 5) + "px")
+            .style("top", (d3.event.pageY - 28) + "px");
+		})
 		.on("mouseout", function(d) {
 		  d3.select(this).style("fill", function(d) { return color(dataset[d.datasetIdx].subject)});
-		  svg.select("text#description")
-		  	.text("Pass mouse over a movie for info, click to see its own graph")
+		  
+		  div.transition()
+            .duration(500)
+            .style("opacity", 0);
 		})
 		.on("click", function(d) {
-		  currMovie = d.datasetIdx;
+			div.transition()
+				.duration(500)
+				.style("opacity", 0);
+			
+			currMovie = d.datasetIdx;
 		  loadData();
 		})
 		
@@ -311,16 +329,6 @@ function draw()
          .attr("font-family", "sans-serif")
          .attr("font-size", "16px")
          .attr("fill", "black");
-	
-	svg.append("text")
-		 .attr("id", "description")
-         .attr("x", 0)
-         .attr("y", h-25)
-         .text("Pass mouse over a movie for info, click to see its own graph")
-         .attr("font-family", "sans-serif")
-         .attr("font-size", "16px")
-         .attr("fill", "black");
-
 }
 
 function relationEdgeStyleSolid(d)
