@@ -1,5 +1,5 @@
-var w = 1200;
-var h = 600;
+var w = 800;
+var h = 800;
 var x;                        
 var y;
 var dataset = [];
@@ -134,6 +134,34 @@ function draw()
 		  loadData();
 		})
 		
+	svg.append("svg:defs").append("svg:marker")
+							.attr("id", "triangle")
+							.attr("refX", 0)
+							.attr("refY", 5)
+							.attr("markerUnits", "strokeWidth")
+							.attr("markerWidth", 30)
+							.attr("markerHeight", 30)
+							.attr("orient", "auto")
+							.append("path")
+							.attr("d", "M 0 0 L 10 5 L 0 10 z")
+							.style("fill", "black");
+	
+	svg.append("line").attr("x1", w/2)
+						.attr("y1", h-100)
+						.attr("x2", 50)
+						.attr("y2", h-100)
+						.attr("stroke-width", 2)
+						.attr("stroke", "black")
+						.attr("marker-end", "url(#triangle)");
+						
+	svg.append("line").attr("x1", w/2)
+						.attr("y1", h-100)
+						.attr("x2", w-50)
+						.attr("y2", h-100)
+						.attr("stroke-width", 2)
+						.attr("stroke", "black")
+						.attr("marker-end", "url(#triangle)");
+	
 	svg.append("text")
          .attr("x", 0)
          .attr("y", h-25)
@@ -141,6 +169,7 @@ function draw()
          .attr("font-family", "sans-serif")
          .attr("font-size", "16px")
          .attr("fill", "black");
+
 }
 
 function subjectColor(d)
