@@ -41,6 +41,8 @@ function loadData()
 	
 	svg.selectAll("*").remove();
 	
+	currMovie = parseInt(location.hash.substring(1, location.hash.length));
+	
 	fillNeighbour();
 	neighboursToNodes(neighbours);
 	draw();
@@ -159,8 +161,8 @@ function draw()
 				.duration(500)
 				.style("opacity", 0);
 			
-			currMovie = d.datasetIdx;
-		  loadData();
+			location.hash = d.datasetIdx;
+			loadData();
 		})
 		
 	svg.append("line")

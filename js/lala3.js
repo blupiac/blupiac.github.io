@@ -100,6 +100,7 @@ for (var i = 1; i < 4; i++) {
                   director: d["Director"],
                   value:  +d["Popularity"],
                   awards: d["Awards"],
+				  id: i
               };
 
 
@@ -226,10 +227,22 @@ function draw(){
         div.transition()
             .duration(500)
             .style("opacity", 0);
-    })  .on("click", teste);
+    })
+	.on("click", function(d) {
+			alert("hi");
+			location.href += "#" + d.id;
+			var x = location.hash;
+			document.getElementById("demo").innerHTML = "The anchor part is now: " + x;
+	});
+
 }
 
-
+// Alert some text if there has been changes to the anchor part
+function loadFocus() {
+	
+	window.location.href = window.location.href.replace("index2", "index");
+}
+	
 function draw2(ar){
   // console.log("Tidsadspo", ar);
 
@@ -279,72 +292,12 @@ function draw2(ar){
         div.transition()
             .duration(500)
             .style("opacity", 0);
-    })  .on("click", teste)
+    })
+	.on("click", function(d) {
+			location.hash = d.id;
+	});
 
-    // node.transition()
-    // .duration(750)
-    // .delay(function(d, i) { return i * 5; })
-    // .attrTween("r", function(d) {
-    //   var i = d3.interpolate(0, d.radius);
-    //   return function(t) { return d.radius = i(t); };
-    // });
 }
-
-//
-// function tick(e) {
-//   node
-//   .each(cluster(10 * e.alpha * e.alpha))
-// //      .each(collide(.5))
-//       .attr("cx", function(d) { return d.x; })
-//       .attr("cy", function(d) { return d.y; });
-// }
-//
-// // Move d to be adjacent to the cluster node.
-// function cluster(alpha) {
-//   return function(d) {
-//     var cluster = clusters[d.sub];
-//     if (cluster === d) return;
-//     var x = d.x - cluster.x,
-//         y = d.y - cluster.y,
-//         l = Math.sqrt(x * x + y * y),
-//         r = d.radius + cluster.radius;
-//     if (l != r) {
-//       l = (l - r) / l * alpha;
-//       d.x -= x *= l;
-//       d.y -= y *= l;
-//       cluster.x += x;
-//       cluster.y += y;
-//     }
-//   };
-// }
-//
-// // Resolves collisions between d and all other circles.
-// function collide(alpha) {
-//   var quadtree = d3.geom.quadtree(nodes);
-//   return function(d) {
-//     var r = d.radius + maxRadius + Math.max(padding, clusterPadding),
-//         nx1 = d.x - r,
-//         nx2 = d.x + r,
-//         ny1 = d.y - r,
-//         ny2 = d.y + r;
-//     quadtree.visit(function(quad, x1, y1, x2, y2) {
-//       if (quad.point && (quad.point !== d)) {
-//         var x = d.x - quad.point.x,
-//             y = d.y - quad.point.y,
-//             l = Math.sqrt(x * x + y * y),
-//             r = d.radius + quad.point.radius + (d.sub === quad.point.cluster ? padding : clusterPadding);
-//         if (l < r) {
-//           l = (l - r) / l * alpha;
-//           d.x -= x *= l;
-//           d.y -= y *= l;
-//           quad.point.x += x;
-//           quad.point.y += y;
-//         }
-//       }
-//       return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
-//     });
-//   };
-// }
 
  function teste(d){
   //  console.log("Tipo", (d.sub));
