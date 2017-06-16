@@ -1,12 +1,10 @@
-var w = 800;
+var w = 1200;
 var h = 800;
 var x;                        
 var y;
 var dataset = [];
-var currMovie = 10;
+var currMovie;
 var neighbours = [];
-var links = [];
-var nodes = [];
 
 /*
 var neighboursName = [];
@@ -23,18 +21,14 @@ var svg = d3.select("body")
             .attr("width", w)
             .attr("height", h);
 
+var neighbours = [];
+var currMovie;
 
 function loadData()
 {
-	neighbours.length = 0;
-	links.length = 0;
-	nodes.length = 0;
-	
-	svg.selectAll("*").remove();
-	
+	currMovie = 10;
 	fillNeighbour();
 	neighboursToNodes(neighbours);
-	draw();
 }
 
 d3.tsv("data/film.tsv")
@@ -61,12 +55,13 @@ d3.tsv("data/film.tsv")
      
         dataset = rows;
 		loadData();
+        draw();
+
    });
 
 
 function draw() 
 {
-	// first dashed line for movies that have more than 1 thing in common
 	svg.selectAll("link")
 		.data(neighbours)
 		.enter()
@@ -84,190 +79,56 @@ function draw()
 		.attr("y2", function(n) {
 			return n.y
 		})
-	   .attr("style", relationEdgeStyleSolid)
-   // second solid line for background, will be same color as 1st line is 
-   // movies have only 1 thing in common
-	svg.selectAll("link")
-		.data(neighbours)
-		.enter()
-		.append("line")
-		.attr("class", "link")
-		.attr("x1", function() {
-			return neighbours[0].x
-		})
-		.attr("y1", function() {
-			return neighbours[0].y
-		})
-		.attr("x2", function(n) {
-			return n.x
-		})
-		.attr("y2", function(n) {
-			return n.y
-		})
-	   .attr("style", relationEdgeStyleDashed)
+	   .attr("fill", "none")
+	   .attr("stroke", "black");
 
-    svg.selectAll("node")
+    svg.selectAll("circle")
         .data(neighbours)
         .enter()
         .append("circle")
         .attr("r", function(d) { return d.radius })
         .attr("cx", function(d) { return d.x })
     	.attr("cy", function(d) { return d.y })
-    	.attr("fill", subjectColor)
-		.on("mouseover", function(d) {
-		  d3.select(this).style("fill", "green");
-		  svg.selectAll("text")
-		  	.text("Title: " + d.name + 
-					" | Year: " + dataset[d.datasetIdx].year + 
-					" | Director: " + dataset[d.datasetIdx].director + 
-					" | Length: " + dataset[d.datasetIdx].length + "min" + 
-					" | Actor: " + dataset[d.datasetIdx].actor + 
-					" | Actress: " + dataset[d.datasetIdx].actress)
-		})                  
-		.on("mouseout", function(d) {
-		  d3.select(this).style("fill", subjectColor);
-		  svg.selectAll("text")
-		  	.text("Pass mouse over a movie for info, click to see its own graph")
-		})
-		.on("click", function(d) {
-		  currMovie = d.datasetIdx;
-		  loadData();
-		})
-		
-	svg.append("svg:defs").append("svg:marker")
-							.attr("id", "triangle")
-							.attr("refX", 0)
-							.attr("refY", 5)
-							.attr("markerUnits", "strokeWidth")
-							.attr("markerWidth", 30)
-							.attr("markerHeight", 30)
-							.attr("orient", "auto")
-							.append("path")
-							.attr("d", "M 0 0 L 10 5 L 0 10 z")
-							.style("fill", "black");
-	
-	svg.append("line").attr("x1", w/2)
-						.attr("y1", h-100)
-						.attr("x2", 50)
-						.attr("y2", h-100)
-						.attr("stroke-width", 2)
-						.attr("stroke", "black")
-						.attr("marker-end", "url(#triangle)");
-						
-	svg.append("line").attr("x1", w/2)
-						.attr("y1", h-100)
-						.attr("x2", w-50)
-						.attr("y2", h-100)
-						.attr("stroke-width", 2)
-						.attr("stroke", "black")
-						.attr("marker-end", "url(#triangle)");
-	
-	svg.append("text")
-         .attr("x", 0)
-         .attr("y", h-25)
-         .text("Pass mouse over a movie for info, click to see its own graph")
-         .attr("font-family", "sans-serif")
-         .attr("font-size", "16px")
-         .attr("fill", "black");
-
+    	.attr("fill", function(d) { return "blue" })
 }
 
-function subjectColor(d)
-{
-	switch(dataset[d.datasetIdx].subject.toLowerCase()) {
-		case "comedy":
-			return "pink";
-		case "action":
-			return "red";
-		default:
-			return "blue";
-	}
-}
-
-function relationEdgeStyleSolid(d)
-{
-	switch(d.relation[0]) {
-		case "actress":
-			return "stroke:#FFC0CB;stroke-width: 5;fill: none;";
-		case "actor":
-			return "stroke:#FF0000;stroke-width: 5;fill: none;";
-		default:
-			return "stroke:#0000FF;stroke-width: 5;fill: none;";
-	}
-}
-
-function relationEdgeStyleDashed(d)
-{
-	if(d.relation.length == 1)
-	{
-		switch(d.relation[0]) {
-			case "actress":
-				return "stroke:#FFC0CB;stroke-width: 5";
-			case "actor":
-				return "stroke:#FF0000;stroke-width: 5";
-			default:
-				return "stroke:#0000FF;stroke-width: 5";
-		}
-	}
-	else if(d.relation.length == 2)
-	{
-		switch(d.relation[1]) {
-			case "actress":
-				return "stroke:#FFC0CB;stroke-width: 5;stroke-dasharray: 5,5";
-			case "actor":
-				return "stroke:#FF0000;stroke-width: 5;stroke-dasharray: 5,5";
-			default:
-				return "stroke:#0000FF;stroke-width: 5;stroke-dasharray: 5,5";
-		}
-	}
-	else
-	{
-		return "stroke:#FFD700;stroke-width: 10;fill: none;"
-	}
-}
-			
 // 3 functions below are placeholders
 
 function getSameDirector()
 {
-	var rowNums = [currMovie+1, currMovie-1, currMovie+2, currMovie-3];
+	var rowNums = [2, 3, 9];
 	
 	return rowNums;
 }
 
 function getSameActor()
 {
-	var rowNums = [currMovie+1, currMovie-2, currMovie+2];
+	var rowNums = [1, 3, 9];
 	
 	return rowNums;
 }
 
 function getSameActress()
 {
-	var rowNums = [currMovie+1, currMovie-3, currMovie+3, currMovie-2,];
+	var rowNums = [2, 7, 9];
 	
 	return rowNums;
 }
 
 function fillNeighbour()
 {
+	var current = [currMovie];
 	var sameDirector = getSameDirector();
 	var sameActor = getSameActor();
 	var sameActress = getSameActress();	
 
-	// size <10 is hard to click on
-	p = d3.scale.linear()
-            .domain([0,100])
-            .range([10, 100]);
-	
 	neighbours[0] = {
 		"name":dataset[currMovie].title,
 		"relation":"current",
 		"timeDistance":0,
 		"x":w/2,
 		"y":h/2,
-		"radius":p(dataset[currMovie].popularity),
-		"datasetIdx":currMovie
+		"radius":dataset[currMovie].popularity
 	};	
 
 	insertNeighbours(sameDirector, "director");
@@ -278,15 +139,10 @@ function fillNeighbour()
 function insertNeighbours(rownums, relation)
 {
 	var buffer = neighbours.length;
-	var neighIndex = neighbours.length;
-	
-	// size <10 is hard to click on
-	p = d3.scale.linear()
-            .domain([0,100])
-            .range([10, 100]);
-	
+
 	for(var i = 0 ; i < rownums.length ; i++)
 	{
+/*
 		var exists = -1;
 		for(var j = 1 ; j < neighbours.length ; j++)
 		{
@@ -301,47 +157,33 @@ function insertNeighbours(rownums, relation)
 			neighbours[exists].relation.push(relation);
 		}
 		else
-		{
-			neighbours[neighIndex] = {
+		{*/
+			neighbours[i + buffer] = {
 				"name":dataset[rownums[i]].title,
 				"relation":[relation],
 				"timeDistance":dataset[rownums[i]].year - dataset[currMovie].year,
 				"x":0,
 				"y":0,
-				"radius":p(dataset[rownums[i]].popularity),
-				"datasetIdx":rownums[i]
-			};
-			neighIndex++;
+				"radius":dataset[rownums[i]].popularity
+//			};
 		}
+
+		
 	}
 }
 
 function neighboursToNodes(neighbours)
-{	
+{
 	var neighboursNodes = [];
 	var allYears = neighbours.map(function(neighbours) {return neighbours.timeDistance;});
-	xMinus = d3.scale.linear()
-            .domain([d3.min(allYears),0])
-            .range([100, w/2]);
-	xPlus = d3.scale.linear()
-            .domain([0,d3.max(allYears)])
-            .range([w/2, w-100]);
-			
-	y = d3.scale.linear()
-            .domain([0,1])
-            .range([100, h-150]);
+	x = d3.scale.linear()
+            .domain(d3.extent(allYears))
+            .range([100, w-100]);
 	
 	for(var i = 1 ; i < neighbours.length ; i++)
 	{
-		if(neighbours[i].timeDistance < 0)
-		{	
-			neighbours[i].x = xMinus(neighbours[i].timeDistance);
-		}
-		else
-		{
-			neighbours[i].x = xPlus(neighbours[i].timeDistance);
-		}
-		neighbours[i].y = y(Math.random());
+		neighbours[i].x = x(neighbours[i].timeDistance);
+		neighbours[i].y = h/2;
 
 		collisionTolerance = 0.1;
 		
@@ -361,8 +203,7 @@ function neighboursToNodes(neighbours)
 					"timeDistance":0,
 					"x":neighbours[i].x,
 					"y":neighbours[i].y + mult * (dist-1),
-					"radius":neighbours[i].radius,
-					"datasetIdx":0
+					"radius":neighbours[i].radius
 				};
 				
 				if(dist < distance(neighbours[i], tempNeighbour))
@@ -370,13 +211,13 @@ function neighboursToNodes(neighbours)
 					mult *= -1;
 				}
 				
-				// -1 helps when distance is very small
+				// -1 helps when distqnce is very small
 				neighbours[i].y += mult * (dist-1);
 				
 				dist = distance(neighbours[i], neighbours[j]);
 			}
 		}
-	}
+	}	
 }
 
 function distance(c1, c2)
@@ -392,3 +233,4 @@ svg.append("text")
          .attr("font-family", "sans-serif")
          .attr("font-size", "20px")
          .attr("fill", "blue");
+
