@@ -9,8 +9,6 @@ var y;
 var dataset = [];
 var currMovie;
 var neighbours = [];
-var links = [];
-var nodes = [];
 
 var color = d3.scale.ordinal()
 			.domain(["","Comedy", "Action", "Drama", "Adventure", "Mystery", "Western", "Music", "Horror", "War", "Crime"])
@@ -36,8 +34,6 @@ var svg = d3.select("body")
 function loadData()
 {
 	neighbours.length = 0;
-	links.length = 0;
-	nodes.length = 0;
 	
 	svg.selectAll("*").remove();
 	
@@ -130,6 +126,7 @@ function draw()
     	.attr("cy", function(d) { return d.y })
     	.attr("fill", function(d) { return color(dataset[d.datasetIdx].subject)} )
 		.style("stroke", function(d) { return color_stroke(dataset[d.datasetIdx].awards);})
+		.attr("stroke-width", 1.2)
 		.on("mouseover", function(d) {
 			
 			d3.select(this).style("fill", function(d) {
@@ -313,7 +310,7 @@ function draw()
          .attr("y", graph_LR_y + 120)
          .text(function(d) 
 				{ 
-					var allYears = neighbours.map(function(neighbours) {return neighbours.timeDistance;})
+					var allYears = neighbours.map(function(neighbours) {return neighbours.timeDistance;});
 					return dataset[currMovie].year + d3.min(allYears);
 				})
          .attr("font-family", "sans-serif")
@@ -395,27 +392,50 @@ function relationEdgeStyleDashed(d)
 	}
 }
 			
-// 3 functions below are placeholders
-
 function getSameDirector()
 {
-	var rowNums = [currMovie+1, currMovie-1, currMovie+2, currMovie-3];
+	var rowNumsDir = [];
 	
-	return rowNums;
+	for(var i = 0 ; i < dataset.length ; ++i)
+	{
+		if( ( dataset[i].director === dataset[currMovie].director ) &&
+			( i != currMovie ) &&
+			( dataset[i].director != "" ) )
+		{
+			rowNumsDir.push(i);
+		}  
+	}
+	return rowNumsDir;
 }
 
 function getSameActor()
 {
-	var rowNums = [currMovie+1, currMovie-2, currMovie+2];
+	var rowNumsAct = [];
 	
-	return rowNums;
+	for(var i = 0 ; i < dataset.length ; ++i ){ 
+        if( ( dataset[i].actor === dataset[currMovie].actor ) &&
+			( i != currMovie ) &&
+			( dataset[i].actor != "" ) )    
+        {
+			rowNumsAct.push(i);
+		}  
+	}
+	return rowNumsAct;
 }
 
 function getSameActress()
 {
-	var rowNums = [currMovie+1, currMovie-3, currMovie+3, currMovie-2,];
+	var rowNumsActr = [];	
 	
-	return rowNums;
+	for( var i = 0 ; i < dataset.length ; ++i ){    
+        if( ( dataset[i].actress === dataset[currMovie].actress ) &&
+			( i != currMovie ) &&
+			( dataset[i].actress != "" ) )
+		{
+           rowNumsActr.push(i);
+		}
+    }      
+	return rowNumsActr;
 }
 
 function fillNeighbour()
