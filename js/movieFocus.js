@@ -4,7 +4,7 @@ var graph_UL_x = 50;
 var graph_UL_y = 50;
 var graph_LR_x = 600;
 var graph_LR_y = 600;
-var x;                        
+var x;
 var y;
 var dataset = [];
 var currMovie;
@@ -13,6 +13,9 @@ var links = [];
 var nodes = [];
 
 var color = d3.scale.ordinal()
+//cores atualizadas!!
+//  .domain(["","Comedy", "Action", "Romance", "Drama", "Adventure", "Mystery", "Western", "Music", "Horror", "War", "Crime", "Science Fiction", "Short", "War", "Westerns", "Fantasy"])
+ //.range(["#999", "#00CED1", "#32CD32", "#999", "#FF1493", "#FF4500", "#A020F0", "#6495ED", "#f1c40f", "#836FFF", "#FA8072", "#CD853F", "#c39e0d", "#2F4F4F",  "#b03a2e", "#f39c12",  "#d7dbdd" ]);
 			.domain(["","Comedy", "Action", "Drama", "Adventure", "Mystery", "Western", "Music", "Horror", "War", "Crime"])
 			.range(["#999", "#00CED1", "#32CD32", "#FF1493", "#FF4500", "#A020F0", "#6495ED", "#2F4F4F", "#836FFF", "#FA8072", "#CD853F"]);
 
@@ -21,8 +24,8 @@ var color_hover = d3.scale.ordinal()
 			.range(["#999", "#10DEF1", "#42DD42", "#FF24A3", "#FF5510", "#B030F0", "#74A5FD", "#3F5F5F", "#937FFF", "#FA9082", "#DD954F"]);
 
 var color_stroke = d3.scale.ordinal()
-					.domain(["No", "Yes"])
-					.range(["none", "yellow"]);
+.domain(["", "No", "Yes"])
+.range(["none", "#666", "yellow"]);
 
 // loosely based on https://stackoverflow.com/questions/28102089/simple-graph-of-nodes-and-links-without-using-force-layout
 
@@ -38,18 +41,18 @@ function loadData()
 	neighbours.length = 0;
 	links.length = 0;
 	nodes.length = 0;
-	
+
 	svg.selectAll("*").remove();
-	
+
 	currMovie = parseInt(location.hash.substring(1, location.hash.length));
-	
+
 	fillNeighbour();
 	neighboursToNodes(neighbours);
 	draw();
 }
 
 d3.tsv("data/film.tsv")
-	.row(function (d, i) 
+	.row(function (d, i)
 	{
             return {
                 year: +d.Year,
@@ -69,13 +72,13 @@ d3.tsv("data/film.tsv")
             console.log("First row: ", rows[1])
             console.log("Last  row: ", rows[rows.length-1])
         }
-     
+
         dataset = rows;
 		loadData();
    });
 
 
-function draw() 
+function draw()
 {
 	// first dashed line for movies that have more than 1 thing in common
 	svg.selectAll("link")
@@ -96,7 +99,7 @@ function draw()
 			return n.y
 		})
 	   .attr("style", relationEdgeStyleSolid)
-   // second solid line for background, will be same color as 1st line is 
+   // second solid line for background, will be same color as 1st line is
    // movies have only 1 thing in common
 	svg.selectAll("link")
 		.data(neighbours)
@@ -120,7 +123,7 @@ function draw()
 	var div = d3.select("body").append("div")
         .attr("class", "tooltip")
         .style("opacity", 0);
-	   
+
     svg.selectAll("node")
         .data(neighbours)
         .enter()
@@ -131,14 +134,14 @@ function draw()
     	.attr("fill", function(d) { return color(dataset[d.datasetIdx].subject)} )
 		.style("stroke", function(d) { return color_stroke(dataset[d.datasetIdx].awards);})
 		.on("mouseover", function(d) {
-			
+
 			d3.select(this).style("fill", function(d) {
 					return color_hover(dataset[d.datasetIdx].subject)});
-			
+
 			div.transition()
 				.duration(200)
 				.style("opacity", .9)
-			
+
 			div.html( "<h1><b>" + d.name + ", "+
 								dataset[d.datasetIdx].year + "</b></h1><i>"  +
 								dataset[d.datasetIdx].subject + "</i><br/>" +
@@ -151,7 +154,7 @@ function draw()
 		})
 		.on("mouseout", function(d) {
 		  d3.select(this).style("fill", function(d) { return color(dataset[d.datasetIdx].subject)});
-		  
+
 		  div.transition()
             .duration(500)
             .style("opacity", 0);
@@ -160,11 +163,11 @@ function draw()
 			div.transition()
 				.duration(500)
 				.style("opacity", 0);
-			
+
 			location.hash = d.datasetIdx;
 			loadData();
 		})
-		
+
 	svg.append("line")
 		.attr("x1", graph_LR_y + 70)
 		.attr("y1", 100)
@@ -283,7 +286,7 @@ function draw()
 							.append("path")
 							.attr("d", "M 0 0 L 10 5 L 0 10 z")
 							.style("fill", "black");
-	
+
 	svg.append("line").attr("x1", graph_LR_x/2)
 						.attr("y1", graph_LR_y +100)
 						.attr("x2", graph_UL_x)
@@ -291,7 +294,7 @@ function draw()
 						.attr("stroke-width", 2)
 						.attr("stroke", "black")
 						.attr("marker-end", "url(#triangle)");
-						
+
 	svg.append("line").attr("x1", graph_LR_x/2)
 						.attr("y1", h-100)
 						.attr("x2", graph_LR_x)
@@ -299,7 +302,7 @@ function draw()
 						.attr("stroke-width", 2)
 						.attr("stroke", "black")
 						.attr("marker-end", "url(#triangle)");
-	
+
 	svg.append("text")
          .attr("x", graph_LR_x/2)
          .attr("y", graph_LR_y + 120)
@@ -311,8 +314,8 @@ function draw()
 	svg.append("text")
          .attr("x", graph_UL_x)
          .attr("y", graph_LR_y + 120)
-         .text(function(d) 
-				{ 
+         .text(function(d)
+				{
 					var allYears = neighbours.map(function(neighbours) {return neighbours.timeDistance;})
 					return dataset[currMovie].year + d3.min(allYears);
 				})
@@ -323,15 +326,15 @@ function draw()
 	svg.append("text")
          .attr("x", graph_LR_x - 40)
          .attr("y", graph_LR_y + 120)
-         .text(function(d) 
-				{ 
+         .text(function(d)
+				{
 					var allYears = neighbours.map(function(neighbours) {return neighbours.timeDistance;})
 					return dataset[currMovie].year + d3.max(allYears);
 				})
          .attr("font-family", "sans-serif")
          .attr("font-size", "16px")
          .attr("fill", "black");
-		 
+
 	svg.append("text")
         .attr("x", graph_LR_x/2 - 65)
         .attr("y", graph_LR_y + 150)
@@ -394,27 +397,27 @@ function relationEdgeStyleDashed(d)
 		return "stroke:#FFD700;stroke-width: 10;fill: none;"
 	}
 }
-			
+
 // 3 functions below are placeholders
 
 function getSameDirector()
 {
 	var rowNums = [currMovie+1, currMovie-1, currMovie+2, currMovie-3];
-	
+
 	return rowNums;
 }
 
 function getSameActor()
 {
 	var rowNums = [currMovie+1, currMovie-2, currMovie+2];
-	
+
 	return rowNums;
 }
 
 function getSameActress()
 {
 	var rowNums = [currMovie+1, currMovie-3, currMovie+3, currMovie-2,];
-	
+
 	return rowNums;
 }
 
@@ -422,13 +425,13 @@ function fillNeighbour()
 {
 	var sameDirector = getSameDirector();
 	var sameActor = getSameActor();
-	var sameActress = getSameActress();	
+	var sameActress = getSameActress();
 
 	// size <10 is hard to click on
 	p = d3.scale.linear()
             .domain([0,100])
             .range([10, 50]);
-	
+
 	neighbours[0] = {
 		"name":dataset[currMovie].title,
 		"relation":"current",
@@ -437,7 +440,7 @@ function fillNeighbour()
 		"y":graph_LR_y/2,
 		"radius":p(dataset[currMovie].popularity),
 		"datasetIdx":currMovie
-	};	
+	};
 
 	insertNeighbours(sameDirector, "director");
 	insertNeighbours(sameActor, "actor");
@@ -448,12 +451,12 @@ function insertNeighbours(rownums, relation)
 {
 	var buffer = neighbours.length;
 	var neighIndex = neighbours.length;
-	
+
 	// size <10 is hard to click on
 	p = d3.scale.linear()
             .domain([0,100])
             .range([10, 50]);
-	
+
 	for(var i = 0 ; i < rownums.length ; i++)
 	{
 		var exists = -1;
@@ -486,7 +489,7 @@ function insertNeighbours(rownums, relation)
 }
 
 function neighboursToNodes(neighbours)
-{	
+{
 	var neighboursNodes = [];
 	var allYears = neighbours.map(function(neighbours) {return neighbours.timeDistance;});
 	xMinus = d3.scale.linear()
@@ -495,15 +498,15 @@ function neighboursToNodes(neighbours)
 	xPlus = d3.scale.linear()
             .domain([0,d3.max(allYears)])
             .range([graph_LR_x/2, graph_LR_x]);
-			
+
 	y = d3.scale.linear()
             .domain([0,1])
             .range([graph_UL_y, graph_LR_y]);
-	
+
 	for(var i = 1 ; i < neighbours.length ; i++)
 	{
 		if(neighbours[i].timeDistance < 0)
-		{	
+		{
 			neighbours[i].x = xMinus(neighbours[i].timeDistance);
 		}
 		else
@@ -513,15 +516,15 @@ function neighboursToNodes(neighbours)
 		neighbours[i].y = y(Math.random());
 
 		collisionTolerance = 0.1;
-		
+
 		// checks collisions
 		for(var j = 0 ; j < i ; j++)
 		{
 			var dist = distance(neighbours[i], neighbours[j]);
-			
+
 			// random number, either -1 or 1
 			var mult = Math.round(Math.random())%2 * 2 - 1;
-			
+
 			while(dist < -collisionTolerance)
 			{
 				var tempNeighbour = {
@@ -533,15 +536,15 @@ function neighboursToNodes(neighbours)
 					"radius":neighbours[i].radius,
 					"datasetIdx":0
 				};
-				
+
 				if(dist < distance(neighbours[i], tempNeighbour))
 				{
 					mult *= -1;
 				}
-				
+
 				// -1 helps when distance is very small
 				neighbours[i].y += mult * (dist-1);
-				
+
 				dist = distance(neighbours[i], neighbours[j]);
 			}
 		}
@@ -561,4 +564,3 @@ svg.append("text")
          .attr("font-family", "sans-serif")
          .attr("font-size", "20px")
          .attr("fill", "blue");
-
