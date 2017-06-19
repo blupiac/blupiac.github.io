@@ -9,18 +9,8 @@
 
 body { font: 12px Arial;}
 
-path {
-    stroke: steelblue;
-    stroke-width: 2;
-    fill: none;
-}
-
-.axis path,
-.axis line {
-    fill: none;
-    stroke: grey;
-    stroke-width: 1;
-    shape-rendering: crispEdges;
+h1{
+  font: 14px Arial;
 }
 
 div.tooltip {
@@ -43,6 +33,23 @@ div.tooltip {
 <!-- <script type="text/javascript" src="js/movieFocus.js"></script> -->
 <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js" charset="utf-8"></script>
 
-<script type="text/javascript" src="js/mainPage.js"></script>
+<script type="text/javascript" src="js/hm.js"></script>
+<div id="option">
+    <input id="update" type="checkbox" checked class="btn btn-default" onclick="updateData(1)">Action</input>
+    <input id="update" type="checkbox" checked class="btn btn-default" onclick="updateData(2)">Adventure</input>
+    <input id="update" type="checkbox" checked class="btn btn-default" onclick="updateData(4)">Comedy</input>
+    <input id="update" type="checkbox" checked class="btn btn-default" onclick="updateData(5)">Crime</input>
+    <input id="update" type="checkbox" checked class="btn btn-default" onclick="updateData(6)">Drama</input>
+    <input id="update" type="checkbox" checked class="btn btn-default" onclick="updateData(7)">Fantasy</input>
+    <input id="update" type="checkbox" checked class="btn btn-default" onclick="updateData(8)">Horror</input>
+    <input id="update" type="checkbox" checked class="btn btn-default" onclick="updateData(9)">Music</input><br>
+    <input id="update" type="checkbox" checked class="btn btn-default" onclick="updateData(10)">Mystery</input>
+    <input id="update" type="checkbox" checked class="btn btn-default" onclick="updateData(11)">Romance</input>
+    <input id="update" type="checkbox" checked class="btn btn-default" onclick="updateData(12)">Science fiction</input>
+    <input id="update" type="checkbox" checked class="btn btn-default" onclick="updateData(13)">Short</input>
+    <input id="update" type="checkbox" checked class="btn btn-default" onclick="updateData(14)">War</input>
+    <input id="update" type="checkbox" checked class="btn btn-default" onclick="updateData(15)">Western</input>
+    <input id="update" type="checkbox" checked class="btn btn-default" onclick="updateData(16)">Westerns</input>
 
+  </div>
 </body>
