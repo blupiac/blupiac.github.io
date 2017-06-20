@@ -37,13 +37,6 @@ var svg = d3.select("body")
 function loadData()
 {
 	neighbours.length = 0;
-<<<<<<< HEAD
-	
-=======
-	links.length = 0;
-	nodes.length = 0;
-
->>>>>>> 75fb4a9d3485da10c51b35d7b9a8130489a2ff9b
 	svg.selectAll("*").remove();
 
 	currMovie = parseInt(location.hash.substring(1, location.hash.length));
@@ -317,15 +310,10 @@ function draw()
 	svg.append("text")
          .attr("x", graph_UL_x)
          .attr("y", graph_LR_y + 120)
-<<<<<<< HEAD
-         .text(function(d) 
-				{ 
-					var allYears = neighbours.map(function(neighbours) {return neighbours.timeDistance;});
-=======
+
          .text(function(d)
 				{
 					var allYears = neighbours.map(function(neighbours) {return neighbours.timeDistance;})
->>>>>>> 75fb4a9d3485da10c51b35d7b9a8130489a2ff9b
 					return dataset[currMovie].year + d3.min(allYears);
 				})
          .attr("font-family", "sans-serif")
@@ -406,7 +394,6 @@ function relationEdgeStyleDashed(d)
 		return "stroke:#FFD700;stroke-width: 10;fill: none;"
 	}
 }
-<<<<<<< HEAD
 			
 function getSameDirector()
 {
@@ -422,21 +409,10 @@ function getSameDirector()
 		}  
 	}
 	return rowNumsDir;
-=======
-
-// 3 functions below are placeholders
-
-function getSameDirector()
-{
-	var rowNums = [currMovie+1, currMovie-1, currMovie+2, currMovie-3];
-
-	return rowNums;
->>>>>>> 75fb4a9d3485da10c51b35d7b9a8130489a2ff9b
 }
 
 function getSameActor()
 {
-<<<<<<< HEAD
 	var rowNumsAct = [];
 	
 	for(var i = 0 ; i < dataset.length ; ++i ){ 
@@ -448,16 +424,10 @@ function getSameActor()
 		}  
 	}
 	return rowNumsAct;
-=======
-	var rowNums = [currMovie+1, currMovie-2, currMovie+2];
-
-	return rowNums;
->>>>>>> 75fb4a9d3485da10c51b35d7b9a8130489a2ff9b
 }
 
 function getSameActress()
 {
-<<<<<<< HEAD
 	var rowNumsActr = [];	
 	
 	for( var i = 0 ; i < dataset.length ; ++i ){    
@@ -469,11 +439,6 @@ function getSameActress()
 		}
     }      
 	return rowNumsActr;
-=======
-	var rowNums = [currMovie+1, currMovie-3, currMovie+3, currMovie-2,];
-
-	return rowNums;
->>>>>>> 75fb4a9d3485da10c51b35d7b9a8130489a2ff9b
 }
 
 function fillNeighbour()
