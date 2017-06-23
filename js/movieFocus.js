@@ -11,11 +11,8 @@ var currMovie;
 var neighbours = [];
 
 var color = d3.scale.ordinal()
-//cores atualizadas!!
-//  .domain(["","Comedy", "Action", "Romance", "Drama", "Adventure", "Mystery", "Western", "Music", "Horror", "War", "Crime", "Science Fiction", "Short", "War", "Westerns", "Fantasy"])
- //.range(["#999", "#00CED1", "#32CD32", "#999", "#FF1493", "#FF4500", "#A020F0", "#6495ED", "#f1c40f", "#836FFF", "#FA8072", "#CD853F", "#c39e0d", "#2F4F4F",  "#b03a2e", "#f39c12",  "#d7dbdd" ]);
-			.domain(["","Comedy", "Action", "Drama", "Adventure", "Mystery", "Western", "Music", "Horror", "War", "Crime"])
-			.range(["#999", "#00CED1", "#32CD32", "#FF1493", "#FF4500", "#A020F0", "#6495ED", "#2F4F4F", "#836FFF", "#FA8072", "#CD853F"]);
+.domain(["","Comedy", "Action", "Romance", "Drama", "Adventure", "Mystery", "Western", "Music", "Horror", "War", "Crime", "Science Fiction", "Short", "Westerns", "Fantasy"])
+.range(["#999", "#00CED1", "#32CD32", "#FF00FF", "#FF1493", "#FF4500", "#A020F0", "#6495ED", "#f1c40f", "#836FFF", "#FA8072", "#CD853F", "#c39e0d", "#2F4F4F", "#f39c12",  "#d7dbdd" ]);
 
 var color_hover = d3.scale.ordinal()
 			.domain(["","Comedy", "Action", "Drama", "Adventure", "Mystery", "Western", "Music", "Horror", "War", "Crime"])
@@ -178,7 +175,7 @@ function draw()
          .attr("font-family", "sans-serif")
          .attr("font-size", "12px")
          .attr("fill", "black");
-         
+
     svg.append("text")
          .attr("x", graph_LR_y + 50)
          .attr("y", 135)
@@ -201,14 +198,14 @@ function draw()
          .attr("font-family", "sans-serif")
          .attr("font-size", "12px")
          .attr("fill", "black");
-         
+
     svg.append("text")
          .attr("x", graph_LR_y + 50)
          .attr("y", 185)
          .text("(" + dataset[neighbours[0].datasetIdx].actor + ")")
          .attr("font-family", "sans-serif")
          .attr("font-size", "12px")
-         .attr("fill", "black");    
+         .attr("fill", "black");
 
 	svg.append("line")
 		.attr("x1", graph_LR_y + 50)
@@ -402,11 +399,11 @@ function relationEdgeStyleDashed(d)
 		return "stroke:#FFD700;stroke-width: 10;fill: none;"
 	}
 }
-			
+
 function getSameDirector()
 {
 	var rowNumsDir = [];
-	
+
 	for(var i = 0 ; i < dataset.length ; ++i)
 	{
 		if( ( dataset[i].director === dataset[currMovie].director ) &&
@@ -414,7 +411,7 @@ function getSameDirector()
 			( dataset[i].director != "" ) )
 		{
 			rowNumsDir.push(i);
-		}  
+		}
 	}
 	return rowNumsDir;
 }
@@ -422,30 +419,30 @@ function getSameDirector()
 function getSameActor()
 {
 	var rowNumsAct = [];
-	
-	for(var i = 0 ; i < dataset.length ; ++i ){ 
+
+	for(var i = 0 ; i < dataset.length ; ++i ){
         if( ( dataset[i].actor === dataset[currMovie].actor ) &&
 			( i != currMovie ) &&
-			( dataset[i].actor != "" ) )    
+			( dataset[i].actor != "" ) )
         {
 			rowNumsAct.push(i);
-		}  
+		}
 	}
 	return rowNumsAct;
 }
 
 function getSameActress()
 {
-	var rowNumsActr = [];	
-	
-	for( var i = 0 ; i < dataset.length ; ++i ){    
+	var rowNumsActr = [];
+
+	for( var i = 0 ; i < dataset.length ; ++i ){
         if( ( dataset[i].actress === dataset[currMovie].actress ) &&
 			( i != currMovie ) &&
 			( dataset[i].actress != "" ) )
 		{
            rowNumsActr.push(i);
 		}
-    }      
+    }
 	return rowNumsActr;
 }
 
