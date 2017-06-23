@@ -11,8 +11,11 @@ var currMovie;
 var neighbours = [];
 
 var color = d3.scale.ordinal()
-.domain(["","Comedy", "Action", "Romance", "Drama", "Adventure", "Mystery", "Western", "Music", "Horror", "War", "Crime", "Science Fiction", "Short", "Westerns", "Fantasy"])
-.range(["#999", "#00CED1", "#32CD32", "#FF00FF", "#FF1493", "#FF4500", "#A020F0", "#6495ED", "#f1c40f", "#836FFF", "#FA8072", "#CD853F", "#c39e0d", "#2F4F4F", "#f39c12",  "#d7dbdd" ]);
+//cores atualizadas!!
+//  .domain(["","Comedy", "Action", "Romance", "Drama", "Adventure", "Mystery", "Western", "Music", "Horror", "War", "Crime", "Science Fiction", "Short", "War", "Westerns", "Fantasy"])
+ //.range(["#999", "#00CED1", "#32CD32", "#999", "#FF1493", "#FF4500", "#A020F0", "#6495ED", "#f1c40f", "#836FFF", "#FA8072", "#CD853F", "#c39e0d", "#2F4F4F",  "#b03a2e", "#f39c12",  "#d7dbdd" ]);
+			.domain(["","Comedy", "Action", "Romance", "Drama", "Adventure", "Mystery", "Western", "Music", "Horror", "War", "Crime", "Science Fiction", "Short", "Westerns", "Fantasy"])
+			.range(["#999", "#00CED1", "#32CD32", "#FF00FF", "#FF1493", "#FF4500", "#A020F0", "#6495ED", "#f1c40f", "#836FFF", "#FA8072", "#CD853F", "#c39e0d", "#2F4F4F", "#f39c12",  "#d7dbdd" ]);
 
 var color_hover = d3.scale.ordinal()
 			.domain(["","Comedy", "Action", "Drama", "Adventure", "Mystery", "Western", "Music", "Horror", "War", "Crime"])
@@ -175,7 +178,7 @@ function draw()
          .attr("font-family", "sans-serif")
          .attr("font-size", "12px")
          .attr("fill", "black");
-
+         
     svg.append("text")
          .attr("x", graph_LR_y + 50)
          .attr("y", 135)
@@ -198,14 +201,14 @@ function draw()
          .attr("font-family", "sans-serif")
          .attr("font-size", "12px")
          .attr("fill", "black");
-
+         
     svg.append("text")
          .attr("x", graph_LR_y + 50)
          .attr("y", 185)
          .text("(" + dataset[neighbours[0].datasetIdx].actor + ")")
          .attr("font-family", "sans-serif")
          .attr("font-size", "12px")
-         .attr("fill", "black");
+         .attr("fill", "black");    
 
 	svg.append("line")
 		.attr("x1", graph_LR_y + 50)
@@ -399,11 +402,11 @@ function relationEdgeStyleDashed(d)
 		return "stroke:#FFD700;stroke-width: 10;fill: none;"
 	}
 }
-
+			
 function getSameDirector()
 {
 	var rowNumsDir = [];
-
+	
 	for(var i = 0 ; i < dataset.length ; ++i)
 	{
 		if( ( dataset[i].director === dataset[currMovie].director ) &&
@@ -411,7 +414,7 @@ function getSameDirector()
 			( dataset[i].director != "" ) )
 		{
 			rowNumsDir.push(i);
-		}
+		}  
 	}
 	return rowNumsDir;
 }
@@ -419,30 +422,30 @@ function getSameDirector()
 function getSameActor()
 {
 	var rowNumsAct = [];
-
-	for(var i = 0 ; i < dataset.length ; ++i ){
+	
+	for(var i = 0 ; i < dataset.length ; ++i ){ 
         if( ( dataset[i].actor === dataset[currMovie].actor ) &&
 			( i != currMovie ) &&
-			( dataset[i].actor != "" ) )
+			( dataset[i].actor != "" ) )    
         {
 			rowNumsAct.push(i);
-		}
+		}  
 	}
 	return rowNumsAct;
 }
 
 function getSameActress()
 {
-	var rowNumsActr = [];
-
-	for( var i = 0 ; i < dataset.length ; ++i ){
+	var rowNumsActr = [];	
+	
+	for( var i = 0 ; i < dataset.length ; ++i ){    
         if( ( dataset[i].actress === dataset[currMovie].actress ) &&
 			( i != currMovie ) &&
 			( dataset[i].actress != "" ) )
 		{
            rowNumsActr.push(i);
 		}
-    }
+    }      
 	return rowNumsActr;
 }
 
@@ -543,34 +546,44 @@ function neighboursToNodes(neighbours)
 		collisionTolerance = 0.1;
 
 		// checks collisions
-		for(var j = 0 ; j < i ; j++)
+		var collisionFlag = true;
+		var iter = 0;
+		while(collisionFlag == true && iter < 10)
 		{
-			var dist = distance(neighbours[i], neighbours[j]);
-
-			// random number, either -1 or 1
-			var mult = Math.round(Math.random())%2 * 2 - 1;
-
-			while(dist < -collisionTolerance)
+			collisionFlag = false;
+			iter++;
+			
+			for(var j = 0 ; j < i ; j++)
 			{
-				var tempNeighbour = {
-					"name":"temp",
-					"relation":"temp",
-					"timeDistance":0,
-					"x":neighbours[i].x,
-					"y":neighbours[i].y + mult * (dist-1),
-					"radius":neighbours[i].radius,
-					"datasetIdx":0
-				};
+				var dist = distance(neighbours[i], neighbours[j]);
 
-				if(dist < distance(neighbours[i], tempNeighbour))
+				// random number, either -1 or 1
+				var mult = Math.round(Math.random())%2 * 2 - 1;
+
+				while(dist < -collisionTolerance)
 				{
-					mult *= -1;
+					collisionFlag = true;
+				
+					var tempNeighbour = {
+						"name":"temp",
+						"relation":"temp",
+						"timeDistance":0,
+						"x":neighbours[i].x,
+						"y":getYinRange(neighbours[i].y, mult, dist),
+						"radius":neighbours[i].radius,
+						"datasetIdx":0
+					};
+
+					if(dist < distance(neighbours[i], tempNeighbour))
+					{
+						mult *= -1;
+					}
+
+					// -1 helps when distance is very small
+					neighbours[i].y = getYinRange(neighbours[i].y, mult, dist);
+
+					dist = distance(neighbours[i], neighbours[j]);
 				}
-
-				// -1 helps when distance is very small
-				neighbours[i].y += mult * (dist-1);
-
-				dist = distance(neighbours[i], neighbours[j]);
 			}
 		}
 	}
@@ -580,6 +593,24 @@ function distance(c1, c2)
 {
 	var dist = Math.sqrt( Math.pow(c1.x - c2.x, 2) + Math.pow(c1.y - c2.y, 2) );
 	return dist - (c1.radius + c2.radius);
+}
+
+function getYinRange(y, mult, dist)
+{
+	var newY = y + mult * (dist-1);
+	
+	if(newY < graph_UL_y)
+	{
+		return graph_LR_y - newY;
+	}
+	else if(newY > graph_LR_y)
+	{
+		return newY - graph_LR_y;
+	}
+	else
+	{
+		return newY;
+	}							
 }
 
 svg.append("text")
