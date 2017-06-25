@@ -140,7 +140,8 @@ function draw()
 
 			div.html( "<h1><b>" + d.name + ", "+
 								dataset[d.datasetIdx].year + "</b></h1><i>"  +
-								dataset[d.datasetIdx].subject + "</i><br/>" +
+								dataset[d.datasetIdx].subject + "</i>, <small>"+
+								dataset[d.datasetIdx].length+" min</small><br/>" +
 								dataset[d.datasetIdx].director + "<br/>" +
 								dataset[d.datasetIdx].actress + "<br/>" +
 								dataset[d.datasetIdx].actor + "<br/><h1>" +
@@ -178,7 +179,7 @@ function draw()
          .attr("font-family", "sans-serif")
          .attr("font-size", "12px")
          .attr("fill", "black");
-         
+
     svg.append("text")
          .attr("x", graph_LR_y + 50)
          .attr("y", 135)
@@ -201,14 +202,14 @@ function draw()
          .attr("font-family", "sans-serif")
          .attr("font-size", "12px")
          .attr("fill", "black");
-         
+
     svg.append("text")
          .attr("x", graph_LR_y + 50)
          .attr("y", 185)
          .text("(" + dataset[neighbours[0].datasetIdx].actor + ")")
          .attr("font-family", "sans-serif")
          .attr("font-size", "12px")
-         .attr("fill", "black");    
+         .attr("fill", "black");
 
 	svg.append("line")
 		.attr("x1", graph_LR_y + 50)
@@ -402,11 +403,11 @@ function relationEdgeStyleDashed(d)
 		return "stroke:#FFD700;stroke-width: 10;fill: none;"
 	}
 }
-			
+
 function getSameDirector()
 {
 	var rowNumsDir = [];
-	
+
 	for(var i = 0 ; i < dataset.length ; ++i)
 	{
 		if( ( dataset[i].director === dataset[currMovie].director ) &&
@@ -414,7 +415,7 @@ function getSameDirector()
 			( dataset[i].director != "" ) )
 		{
 			rowNumsDir.push(i);
-		}  
+		}
 	}
 	return rowNumsDir;
 }
@@ -422,30 +423,30 @@ function getSameDirector()
 function getSameActor()
 {
 	var rowNumsAct = [];
-	
-	for(var i = 0 ; i < dataset.length ; ++i ){ 
+
+	for(var i = 0 ; i < dataset.length ; ++i ){
         if( ( dataset[i].actor === dataset[currMovie].actor ) &&
 			( i != currMovie ) &&
-			( dataset[i].actor != "" ) )    
+			( dataset[i].actor != "" ) )
         {
 			rowNumsAct.push(i);
-		}  
+		}
 	}
 	return rowNumsAct;
 }
 
 function getSameActress()
 {
-	var rowNumsActr = [];	
-	
-	for( var i = 0 ; i < dataset.length ; ++i ){    
+	var rowNumsActr = [];
+
+	for( var i = 0 ; i < dataset.length ; ++i ){
         if( ( dataset[i].actress === dataset[currMovie].actress ) &&
 			( i != currMovie ) &&
 			( dataset[i].actress != "" ) )
 		{
            rowNumsActr.push(i);
 		}
-    }      
+    }
 	return rowNumsActr;
 }
 
@@ -552,7 +553,7 @@ function neighboursToNodes(neighbours)
 		{
 			collisionFlag = false;
 			iter++;
-			
+
 			for(var j = 0 ; j < i ; j++)
 			{
 				var dist = distance(neighbours[i], neighbours[j]);
@@ -563,7 +564,7 @@ function neighboursToNodes(neighbours)
 				while(dist < -collisionTolerance)
 				{
 					collisionFlag = true;
-				
+
 					var tempNeighbour = {
 						"name":"temp",
 						"relation":"temp",
@@ -598,7 +599,7 @@ function distance(c1, c2)
 function getYinRange(y, mult, dist)
 {
 	var newY = y + mult * (dist-1);
-	
+
 	if(newY < graph_UL_y)
 	{
 		return graph_LR_y - newY;
@@ -610,7 +611,7 @@ function getYinRange(y, mult, dist)
 	else
 	{
 		return newY;
-	}							
+	}
 }
 
 svg.append("text")
