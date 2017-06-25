@@ -97,8 +97,6 @@ var a = 1;
     add(hm, clusters[ar[i]].values, ar[i]);
   }
 
-  console.log("tudo", hm)
-
 
   var nodes = bubble.nodes({children:hm}).filter(function(d) { return !d.children; });
 
@@ -151,38 +149,23 @@ var a = 1;
 
 }
 
- function teste2(d){
-   console.log("Tipo", "Uma vez");
-
 
   clusters = d3.nest()
   .key(function(d) { return d.sub; }).sortKeys(d3.ascending)
   .entries(dataset);
 
-  //.sort(function(a, b){ return d3.ascending(a.values, b.values); });
-
 
   var argg =[];
   var a = 10;
-  //for (var i=1; i < clusters.length; i++){
 
     for (var i=1; i <17; i++){
     if(selection[i]==1){
-      //add(argg, i);
       argg.push(i);
-      // a = a+a;
-      // xx[i] = a;
-      // yy[i] = a;
     }
 
   }
 
-
-
-console.log("r", dataset)
 draw2(argg);
-//desenha(hm)
-
 
  }
 
@@ -202,7 +185,6 @@ xx =10
 yy=10
 raio = 10
 
-//alert("abans" +selection[index]);
 
   if(selection[index] == 1){
      selection[index]=0;
@@ -210,7 +192,6 @@ raio = 10
     selection[index]=1;
   }
 
-  //alert("despres" + selection[index]);
 
     var rectange =svg.append("rect")
                              .attr("x", 0)
@@ -218,13 +199,6 @@ raio = 10
                             .attr("width", w)
                            .attr("height", h)
                            .attr("fill", "white");
-
-
-    // zoom part
-    // svg.call(d3.behavior.zoom().scaleExtent([0.5, 10]).on("zoom", function () {
-    //     svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
-    //   }))
-    //   .append("g")
 
 
     p = d3.scale.linear()
@@ -280,7 +254,6 @@ function loadFocus() {
 
  function add(argg, test, cle){
    for (var i=0; i< test.length; i++){
-  //   console.log(test[i].cluster);
      test[i].cluster =cle;
      argg.push(test[i]);
 
@@ -288,9 +261,3 @@ function loadFocus() {
 
  }
 
-// function zoomed() {
-//   container.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-// }
-function lala(award){
-  if (award = Yes)  return "oi";
-}
