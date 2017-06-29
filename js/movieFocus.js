@@ -11,9 +11,6 @@ var currMovie;
 var neighbours = [];
 
 var color = d3.scale.ordinal()
-//cores atualizadas!!
-//  .domain(["","Comedy", "Action", "Romance", "Drama", "Adventure", "Mystery", "Western", "Music", "Horror", "War", "Crime", "Science Fiction", "Short", "War", "Westerns", "Fantasy"])
- //.range(["#999", "#00CED1", "#32CD32", "#999", "#FF1493", "#FF4500", "#A020F0", "#6495ED", "#f1c40f", "#836FFF", "#FA8072", "#CD853F", "#c39e0d", "#2F4F4F",  "#b03a2e", "#f39c12",  "#d7dbdd" ]);
 			.domain(["","Comedy", "Action", "Romance", "Drama", "Adventure", "Mystery", "Western", "Music", "Horror", "War", "Crime", "Science Fiction", "Short", "Westerns", "Fantasy"])
 			.range(["#999", "#00CED1", "#32CD32", "#FF00FF", "#FF1493", "#FF4500", "#A020F0", "#6495ED", "#f1c40f", "#836FFF", "#FA8072", "#CD853F", "#c39e0d", "#2F4F4F", "#f39c12",  "#d7dbdd" ]);
 

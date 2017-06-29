@@ -72,6 +72,15 @@ d3.dsv(";")("data/a.csv")
         defineClusters();
     })
 
+function checkHref()
+{
+	var currHref = window.location.href;
+
+	if(currHref.indexOf("index.html") === -1)
+	{
+		window.location.href += "index.html";
+	}
+}
 
 // bubbles chart base on: https://jrue.github.io/coding/2014/exercises/basicbubblepackchart/
 function drawBubbles(clustersInd) {
