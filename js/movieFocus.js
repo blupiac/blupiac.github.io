@@ -190,7 +190,7 @@ function draw()
 		.attr("y1", 150)
 		.attr("x2", w-10)
 		.attr("y2", 150)
-		.attr("style", "stroke:#FF0000;stroke-width: 5;fill: none;")
+		.attr("style", "stroke:#DC143C;stroke-width: 5;fill: none;")
 
 	svg.append("text")
          .attr("x", graph_LR_y + 50)
@@ -213,7 +213,7 @@ function draw()
 		.attr("y1", 200)
 		.attr("x2", w-10)
 		.attr("y2", 200)
-		.attr("style", "stroke:#0000FF;stroke-width: 5;fill: none;")
+		.attr("style", "stroke:#1E90FF;stroke-width: 5;fill: none;")
 
 	svg.append("text")
          .attr("x", graph_LR_y + 50)
@@ -236,14 +236,14 @@ function draw()
 		.attr("y1", 250)
 		.attr("x2", w-10)
 		.attr("y2", 250)
-		.attr("style", "stroke:#0000FF;stroke-width: 5;fill: none;")
+		.attr("style", "stroke:#1E90FF;stroke-width: 5;fill: none;")
 
 	svg.append("line")
 		.attr("x1", graph_LR_y + 50)
 		.attr("y1", 250)
 		.attr("x2", w-10)
 		.attr("y2", 250)
-		.attr("style", "stroke:#FF0000;stroke-width: 5;stroke-dasharray: 5,5")
+		.attr("style", "stroke:#DC143C;stroke-width: 5;stroke-dasharray: 5,5")
 
 	svg.append("text")
          .attr("x", graph_LR_y + 50)
@@ -357,9 +357,9 @@ function relationEdgeStyleSolid(d)
 		case "actress":
 			return "stroke:#FFC0CB;stroke-width: 5;fill: none;";
 		case "actor":
-			return "stroke:#FF0000;stroke-width: 5;fill: none;";
+			return "stroke:#DC143C;stroke-width: 5;fill: none;";
 		default:
-			return "stroke:#0000FF;stroke-width: 5;fill: none;";
+			return "stroke:#1E90FF;stroke-width: 5;fill: none;";
 	}
 }
 
@@ -371,9 +371,9 @@ function relationEdgeStyleDashed(d)
 			case "actress":
 				return "stroke:#FFC0CB;stroke-width: 5";
 			case "actor":
-				return "stroke:#FF0000;stroke-width: 5";
+				return "stroke:#DC143C;stroke-width: 5";
 			default:
-				return "stroke:#0000FF;stroke-width: 5";
+				return "stroke:#1E90FF;stroke-width: 5";
 		}
 	}
 	else if(d.relation.length == 2)
@@ -382,9 +382,9 @@ function relationEdgeStyleDashed(d)
 			case "actress":
 				return "stroke:#FFC0CB;stroke-width: 5;stroke-dasharray: 5,5";
 			case "actor":
-				return "stroke:#FF0000;stroke-width: 5;stroke-dasharray: 5,5";
+				return "stroke:#DC143C;stroke-width: 5;stroke-dasharray: 5,5";
 			default:
-				return "stroke:#0000FF;stroke-width: 5;stroke-dasharray: 5,5";
+				return "stroke:#1E90FF;stroke-width: 5;stroke-dasharray: 5,5";
 		}
 	}
 	else
