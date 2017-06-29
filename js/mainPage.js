@@ -43,8 +43,7 @@ p = d3.scale.linear()
     .range([1.5, 75]);
 
 
-d3.dsv(";")("data/a.csv")
-
+d3.tsv("data/film.tsv")
     .row(function(d, i) {
         return {
             year: +d["Year"],
