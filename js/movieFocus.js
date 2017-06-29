@@ -4,8 +4,8 @@ var graph_UL_x = 50;
 var graph_UL_y = 50;
 var graph_LR_x = 600;
 var graph_LR_y = 600;
-var x;
-var y;
+var xScale;
+var yScale;
 var dataset = [];
 var currMovie;
 var neighbours = [];
@@ -306,14 +306,6 @@ function draw()
 						.attr("marker-end", "url(#triangle)");
 
 	svg.append("text")
-         .attr("x", graph_LR_x/2)
-         .attr("y", graph_LR_y + 120)
-         .text(function(d) { return dataset[currMovie].year })
-         .attr("font-family", "sans-serif")
-         .attr("font-size", "16px")
-         .attr("fill", "black");
-
-	svg.append("text")
          .attr("x", graph_UL_x)
          .attr("y", graph_LR_y + 120)
 
@@ -518,28 +510,20 @@ function neighboursToNodes(neighbours)
 {
 	var neighboursNodes = [];
 	var allYears = neighbours.map(function(neighbours) {return neighbours.timeDistance;});
-	xMinus = d3.scale.linear()
-            .domain([d3.min(allYears),0])
-            .range([graph_UL_x, graph_LR_x/2]);
-	xPlus = d3.scale.linear()
-            .domain([0,d3.max(allYears)])
-            .range([graph_LR_x/2, graph_LR_x]);
+            
+    xScale = d3.scale.linear()
+            .domain(d3.extent(allYears))
+            .range([graph_UL_x, graph_LR_x]);
 
-	y = d3.scale.linear()
+	yScale = d3.scale.linear()
             .domain([0,1])
             .range([graph_UL_y, graph_LR_y]);
 
 	for(var i = 1 ; i < neighbours.length ; i++)
 	{
-		if(neighbours[i].timeDistance < 0)
-		{
-			neighbours[i].x = xMinus(neighbours[i].timeDistance);
-		}
-		else
-		{
-			neighbours[i].x = xPlus(neighbours[i].timeDistance);
-		}
-		neighbours[i].y = y(Math.random());
+		neighbours[i].x = xScale(neighbours[i].timeDistance);
+
+		neighbours[i].y = yScale(Math.random());
 
 		collisionTolerance = 0.1;
 
@@ -585,6 +569,8 @@ function neighboursToNodes(neighbours)
 			}
 		}
 	}
+	
+	neighbours[0].x = xScale(0);
 }
 
 function distance(c1, c2)
