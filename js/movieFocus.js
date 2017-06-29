@@ -59,12 +59,6 @@ d3.tsv("data/film.tsv")
             };
       })
    .get(function(error, rows) {
-        console.log("Loaded " + rows.length + " rows");
-        if (rows.length > 0) {
-            console.log("First row: ", rows[1])
-            console.log("Last  row: ", rows[rows.length-1])
-        }
-
         dataset = rows;
 		loadData();
    });

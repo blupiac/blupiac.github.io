@@ -5,7 +5,6 @@ var bubbles
 var clusters
 var clusterBubbles = []
 var selection = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
-// var  color  = d3.scale.category20(); //color category
 
 var color_stroke = d3.scale.ordinal()
     .domain(["", "No", "Yes"])
@@ -63,11 +62,6 @@ d3.dsv(";")("data/a.csv")
 
     })
     .get(function(error, rows) {
-        //console.log("Loaded " + rows.length + " rows");
-        if (rows.length > 0) {
-            //console.log("First row: ", rows[1])
-            //console.log("Last  row: ", rows[rows.length-1])
-        }
         dataset = rows;
         defineClusters();
     })
@@ -96,7 +90,6 @@ function drawBubbles(clustersInd) {
         add(clusterBubbles, clusters[clustersInd[i]].values, clustersInd[i]);
     }
 
-    //console.log(clustersInd);
     var nodes = bubble.nodes({
         children: clusterBubbles
     }).filter(function(d) {
@@ -229,18 +222,13 @@ function updateData(i) {
             };
         })
         .get(function(error, rows) {
-            // //console.log("Loaded " + rows.length + " rows");
-            if (rows.length > 0) {
-                // //console.log("First row: ", rows[1])
-                // //console.log("Last  row: ", rows[rows.length-1])
-            }
             dataset = rows;
             defineClusters();
 
         })
 }
 
-// Alert some text if there has been changes to the anchor part
+
 function loadFocus() {
     window.location.href = window.location.href.replace("index", "focus");
 }
