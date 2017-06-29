@@ -78,7 +78,14 @@ function checkHref()
 
 	if(currHref.indexOf("index.html") === -1)
 	{
-		window.location.href += "index.html";
+		if(currHref.charAt(currHref.length - 1) === "/")
+		{
+			window.location.href += "index.html";
+		}
+		else
+		{
+			window.location.href += "/index.html";
+		}
 	}
 }
 
