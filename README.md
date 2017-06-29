@@ -1,4 +1,4 @@
 # IGR204_MovieLink
 
 To open the project:
-https://blupiac.github.io/intex.html
+https://blupiac.github.io/index.html
