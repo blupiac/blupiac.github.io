@@ -522,50 +522,39 @@ function neighboursToNodes(neighbours)
 	for(var i = 1 ; i < neighbours.length ; i++)
 	{
 		neighbours[i].x = xScale(neighbours[i].timeDistance);
-
 		neighbours[i].y = yScale(Math.random());
 
 		collisionTolerance = 0.1;
 
 		// checks collisions
-		var collisionFlag = true;
-		var iter = 0;
-		while(collisionFlag == true && iter < 10)
+		for(var j = 0 ; j < i ; j++)
 		{
-			collisionFlag = false;
-			iter++;
+			var dist = distance(neighbours[i], neighbours[j]);
 
-			for(var j = 0 ; j < i ; j++)
+			// random number, either -1 or 1
+			var mult = Math.round(Math.random())%2 * 2 - 1;
+
+			while(dist < -collisionTolerance)
 			{
-				var dist = distance(neighbours[i], neighbours[j]);
+				var tempNeighbour = {
+					"name":"temp",
+					"relation":"temp",
+					"timeDistance":0,
+					"x":neighbours[i].x,
+					"y":neighbours[i].y + mult * (dist-1),
+					"radius":neighbours[i].radius,
+					"datasetIdx":0
+				};
 
-				// random number, either -1 or 1
-				var mult = Math.round(Math.random())%2 * 2 - 1;
-
-				while(dist < -collisionTolerance)
+				if(dist < distance(neighbours[i], tempNeighbour))
 				{
-					collisionFlag = true;
-
-					var tempNeighbour = {
-						"name":"temp",
-						"relation":"temp",
-						"timeDistance":0,
-						"x":neighbours[i].x,
-						"y":getYinRange(neighbours[i].y, mult, dist),
-						"radius":neighbours[i].radius,
-						"datasetIdx":0
-					};
-
-					if(dist < distance(neighbours[i], tempNeighbour))
-					{
-						mult *= -1;
-					}
-
-					// -1 helps when distance is very small
-					neighbours[i].y = getYinRange(neighbours[i].y, mult, dist);
-
-					dist = distance(neighbours[i], neighbours[j]);
+					mult *= -1;
 				}
+
+				// -1 helps when distance is very small
+				neighbours[i].y += mult * (dist-1);
+
+				dist = distance(neighbours[i], neighbours[j]);
 			}
 		}
 	}
