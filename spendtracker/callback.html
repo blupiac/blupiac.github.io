@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex, nofollow">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-cTdUw9Evm7XchJZiJKa9U++deqDjg0xnb/OJfcSjUcA='; style-src 'sha256-PwF1rxv99gV8Fj0lLBckcEj6SlTv0TgFPrRkz9baobk='; base-uri 'none'; form-action 'none'">
+<title>Plutus sign-in</title>
+<style>
+:root { color-scheme: light dark; --fg: #1b1b1f; --bg: #fdfcff; --muted: #5e5e66; --accent: #3557c4; --error: #b3261e; }
+@media (prefers-color-scheme: dark) { :root { --fg: #e4e2e6; --bg: #1b1b1f; --muted: #a9a9b2; --accent: #b4c4ff; --error: #f2b8b5; } }
+body { margin: 0; padding: 24px 16px; font: 16px/1.5 system-ui, sans-serif; color: var(--fg); background: var(--bg); }
+main { max-width: 32rem; margin: 0 auto; }
+h1 { font-size: 1.4rem; margin: 0 0 8px; }
+p { margin: 0 0 16px; color: var(--muted); }
+textarea { box-sizing: border-box; width: 100%; height: 7rem; font: 13px/1.4 ui-monospace, monospace; padding: 8px; border-radius: 8px; border: 1px solid var(--muted); background: transparent; color: var(--fg); word-break: break-all; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+a.button, button { font: inherit; padding: 10px 16px; border-radius: 20px; border: 1px solid var(--accent); background: transparent; color: var(--accent); text-decoration: none; cursor: pointer; }
+a.button { background: var(--accent); color: var(--bg); }
+.error { color: var(--error); }
+[hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main>
+  <h1 id="title">Return to Plutus</h1>
+  <p id="intro">Your bank sent you back here instead of to the app. Open Plutus, or copy the text below and paste it on the Connect screen.</p>
+  <p id="error" class="error" hidden></p>
+  <div id="result" hidden>
+    <textarea id="payload" readonly aria-label="Sign-in code"></textarea>
+    <div class="actions">
+      <a id="open" class="button" href="#">Open Plutus</a>
+      <button id="copy" type="button">Copy</button>
+    </div>
+  </div>
+  <p id="empty" hidden>Nothing to hand back. Start connecting from the Plutus app.</p>
+</main>
+<script>
+(function () {
+  var search = location.search;
+  var path = location.pathname.replace(/\/$/, "");
+  var params = new URLSearchParams(search);
+  var hasState = params.has("state");
+  var payload = location.origin + path + search;
+  // The code is single use and only the app can redeem it; nothing here is stored or sent anywhere.
+  history.replaceState(null, "", location.pathname);
+
+  if (!hasState || !(params.has("code") || params.has("error"))) {
+    document.getElementById("empty").hidden = false;
+    document.getElementById("intro").hidden = true;
+    return;
+  }
+  if (params.has("error")) {
+    var err = document.getElementById("error");
+    err.textContent = "The bank reported: " + params.get("error") +
+      (params.get("error_description") ? " (" + params.get("error_description") + ")" : "");
+    err.hidden = false;
+  }
+  document.getElementById("payload").value = payload;
+  document.getElementById("result").hidden = false;
+  // Chrome opens an intent:// link straight in the named app.
+  document.getElementById("open").href = "intent://" + location.host + path + search +
+    "#Intent;scheme=https;package=io.github.blupiac.plutus;end";
+  var copy = document.getElementById("copy");
+  copy.addEventListener("click", function () {
+    var area = document.getElementById("payload");
+    var done = function () { copy.textContent = "Copied"; };
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(area.value).then(done, function () { area.select(); document.execCommand("copy"); done(); });
+    } else {
+      area.select(); document.execCommand("copy"); done();
+    }
+  });
+})();
+</script>
+</body>
+</html>
