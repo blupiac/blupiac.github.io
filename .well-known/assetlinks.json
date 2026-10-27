@@ -5,7 +5,7 @@
       "namespace": "android_app",
       "package_name": "io.github.blupiac.plutus",
       "sha256_cert_fingerprints": [
-        "REPLACE_WITH_SIGNING_CERT_SHA256"
+        "4E:CB:AD:A1:AB:F5:D8:73:7D:B3:63:EF:79:DF:ED:44:0E:D8:10:93:B5:6A:5B:BC:A8:8C:D8:89:A4:C1:DF:BE"
       ]
     }
   }
