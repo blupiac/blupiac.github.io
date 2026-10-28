@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-kiPRYmtMQmJi5HIQijxoXmtfnl4+6Tq2S/760rWqg0c='; base-uri 'none'; form-action 'none'">
+<title>Plutus privacy policy</title>
+<style>
+:root { color-scheme: light dark; --fg: #1b1b1f; --bg: #fdfcff; --muted: #5e5e66; --accent: #3557c4; }
+@media (prefers-color-scheme: dark) { :root { --fg: #e4e2e6; --bg: #1b1b1f; --muted: #a9a9b2; --accent: #b4c4ff; } }
+body { margin: 0; padding: 24px 16px; font: 16px/1.6 system-ui, sans-serif; color: var(--fg); background: var(--bg); }
+main { max-width: 40rem; margin: 0 auto; }
+h1 { font-size: 1.5rem; margin: 0 0 4px; }
+h2 { font-size: 1.1rem; margin: 24px 0 4px; }
+p, li { color: var(--muted); }
+a { color: var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Plutus privacy policy</h1>
+  <p>Last updated 28 October 2026.</p>
+
+  <p>Plutus is a personal, read-only spending tracker for Android, built and used by its developer for
+  their own bank account. It has no server, no user accounts, no analytics and no advertising.</p>
+
+  <h2>What Plutus reads</h2>
+  <p>With your consent, given at your bank, Plutus reads the balance and transactions of the account you
+  connect: amounts, dates, counterparty names and IBANs, and descriptions. It reads them through
+  <a href="https://enablebanking.com">Enable Banking</a>, a licensed account information service. Plutus
+  cannot make payments or change anything at your bank.</p>
+
+  <h2>Where your data is kept</h2>
+  <p>Only on your phone. Transactions are stored in an encrypted database (SQLCipher). Its key, your
+  session details and your settings are encrypted with keys held in the Android Keystore. The app
+  excludes itself from Android backups, so none of this is copied to the cloud. Plutus never sends your
+  transactions anywhere.</p>
+
+  <h2>Who else handles it</h2>
+  <ul>
+    <li>Your bank, which provides the data.</li>
+    <li>Enable Banking, which passes it from your bank to the app under its own
+      <a href="https://enablebanking.com">privacy policy and terms</a>.</li>
+    <li>GitHub Pages hosts the page your bank redirects to after you log in. That page stores nothing,
+      loads nothing from elsewhere and sends no referrer, but GitHub may log your IP address as it does
+      for any website.</li>
+  </ul>
+
+  <h2>How long it is kept</h2>
+  <p>Until you remove it. <em>Disconnect</em> in the app revokes the bank access at Enable Banking.
+  Uninstalling the app deletes all data and keys from your phone. Bank access also ends on its own when
+  the consent you gave expires.</p>
+
+  <h2>Contact</h2>
+  <p>Questions: open an issue at <a href="https://github.com/blupiac">github.com/blupiac</a>.</p>
+</main>
+</body>
+</html>
